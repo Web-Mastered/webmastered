@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+{% load blog_tags %}
+
+{% block heading %}
+    {% for block in self.heading_blocks %}
+        {% include_block block %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="w-100">
+        <a href="{{ page.url }}categories" class="text-end float-end">View all categories &#8594;</a>
+    </div>
+    <br>
+    {% for post in posts %}
+        {% for block in post.heading_blocks %}
+            {% if block.block_type == 'heading_featured_image' %}
+                {% image block.value.image width-800 as featured_img %}
+                {% set_featured_img_url featured_img.url as catch %}
+            {% endif %}
+            {% if block.block_type == 'heading_subtitle' %}
+                {% set_subtitle block.value as catch %}
+            {% endif %}
+            {% if block.block_type == 'heading_title' %}
+                {% set_title block.value as catch %}
+            {% endif %}
+        {% endfor %}
+        <div class="card blog-post-card mb-3 w-100">
+            <div class="row g-0 h-100">
+                {% get_featured_img_url as url %}
+                {% get_subtitle as subtitle %}
+                {% get_title as title %}
+                {% if url %}
+                    <div class="col-lg-4 col-12 mx-auto">
+                        <img src="{{ url }}" class="img-fluid" alt="...">
+                    </div>
+                {% endif %}
+                <div class="{% if url %}col-lg-8{% endif %} col-12 position-relative pb-5">
+                    <div class="card-body">
+                        {% if title %}
+                            <h5 class="card-title">{{ title }}</h5>
+                        {% else %}
+                            <h5 class="card-title">{{ post.title }}</h5>
+                        {% endif %}
+                        <p class="card-text">{{ subtitle }}</p>
+                        <a href="{{ post.url }}" class="stretched-link">Click to read...</a>
+                    </div>
+                    <div class="card-footer position-absolute bottom-0 w-100">
+                        Posted: {{ post.first_published_at|date:"j" }}<sup>{{ post.first_published_at|date:"S" }}</sup> {{ post.first_published_at|date:"M Y" }}, 
+                        {% if post.categories.all %}in {% for category in post.categories.all %}{{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}Uncategorised{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

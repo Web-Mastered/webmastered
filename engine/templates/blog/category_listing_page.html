@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+{% load blog_tags %}
+
+{% block heading %}
+    {% for block in self.heading_blocks %}
+        {% include_block block %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="w-100">
+        <a href="{{ blog_listing_page.url }}" class="text-start float-start">&#8592; View all posts</a>
+    </div>
+    <br>
+    <h2>Categories</h2>
+    {% for category in categories %}
+        <div class="card blog-post-card mb-3 w-100">
+            <div class="row g-0 h-100">
+                {% image category.image width-800 as category_img %}
+                {% get_title as title %}
+                {% if category_img.url %}
+                    <div class="col-lg-4 col-12 mx-auto">
+                        <img src="{{ category_img.url }}" class="img-fluid" alt="...">
+                    </div>
+                {% endif %}
+                <div class="{% if category_img.url %}col-lg-8{% endif %} col-12 position-relative pb-5">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <a href="?category={{ category.slug }}" class="stretched-link">Click to view posts...</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

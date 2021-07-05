@@ -1,0 +1,97 @@
+{% load engine_metrics_tags %}
+{% load wagtailsettings_tags %}
+{% get_settings use_default_site=True %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+<body>
+    <div class="container-fluid py-3">
+        <a href="/admin">&#8592; return to dashboard</a>
+        <h1 style="text-transform: capitalize;" class="py-5">About Engine</h1>
+    </div>
+
+    <div class="container-fluid">
+        <h2 style="text-transform: capitalize;">Overview</h2>
+        <p>
+            Engine is a fast and lightweight CMS built by Web Mastered Ltd. It's based on the open-source Wagtail CMS project, additional features, tools and refinements have been 
+            added, allowing a feature-rich website and blog to be created. The websites and web applications that we at Web Mastered Ltd deliver, use Engine as a starting point, we add 
+            extra functionalities and features to it, to deliver a stunning and powerful final product for our clients. We make sure that the products we develop wrap around the 
+            client's company rather than the other way round.
+            <br><br>
+            Speed and efficiency are a few of the main objectives of Engine, the engineers at Web Mastered Ltd hand-craft each line of code to be as fast and efficient as possible.
+            This allows Engine to power even the biggest websites, handling thousands of visitors and hosting thousands of pages effortlessly.
+        </p>
+        <h2 style="text-transform: capitalize;">Upgrading</h2>
+        <p>
+            Engine websites are built to be as efficient as possible with beskpoke and lightweight code, but as your website grows and your your website's visitor count and page 
+            count starts to increase, you may notice that your website may start to run slower. You can get around this issue by upgrading to a more powerful server subscription. 
+            Simply contact us through our website, <a href="https://www.webmastered.cf/" target="_blank">www.webmastered.cf</a>, and our engineers will move you to a more powerful 
+            server.
+            <br><br>
+            You can track your Engine website's performance via the Metrics page in Engine admin settings, <a href="/admin/settings/dashboard/metrics/">click here to visit that page</a>.
+            If you find your hardware utilisation is high and your website is slow, it might be beneficial to upgrade to a more powerful server to keep up with your growing website.
+        </p>
+        <h2 style="text-transform: capitalize;">Support</h2>
+        <p>
+            Engine is engineered to be as low maintenance as possible. Engine is built to run 24-hours everyday, year-in and year-out, non-stop. It is a very rare occurance if an 
+            Engine powered website starts to not work as intended, if this happens, please contact us through our website, 
+            <a href="https://www.webmastered.cf/" target="_blank">www.webmastered.cf</a>, and our engineers will get your website back up and running as soon as possible.
+            <br><br>
+            Unlike our content management system (CMS) counterparts, such as WordPress, Engine and its dependencies don't have to be updated regularly. It is a very rare occurance
+            to have a security vulnerability. As we host our clients' Engine website, we will carry out regular maintanance, ensuring your website runs as smooth as possible, we will
+            also make sure to upgrade outdated softwares and patch any high-risk vulnerabilites that may affect your website.
+        </p>
+        <hr>
+        <h6 style="text-transform: capitalize;">Engine Details</h6>
+        <table class="table table-striped font-monospace">
+            <tbody>
+                <tr>
+                    <td>Version</td>
+                    <td>{% get_engine_version %}</td>
+                </tr>
+                <tr>
+                    <td>Developer</td>
+                    <td>{% get_engine_author %} @ {% get_engine_company %}</td>
+                </tr>
+                <tr>
+                    <td>Copyright</td>
+                    <td>{% get_engine_copyright %}</td>
+                </tr>
+                <tr>
+                    <td>Client</td>
+                    <td>{% get_engine_client %}</td>
+                </tr>
+                <tr>
+                    <td>License</td>
+                    <td>{% get_engine_license %}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</body>
+
+<style>
+.button-longrunning {
+    display: none !important;
+}
+
+.footer__container {
+    display: none !important;
+}
+
+.tab-merged {
+    display: none;
+}
+
+.new-header {
+    display: block !important;
+}
+</style>
+
+<script>
+document.title = "WM Engine - About Engine";
+</script>

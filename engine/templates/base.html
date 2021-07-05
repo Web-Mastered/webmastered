@@ -1,0 +1,117 @@
+{% load static wagtailuserbar %}
+{% load menu_tags %}
+{% load engine_metrics_tags %}
+{% load wagtailimages_tags %}
+{% load compress %}
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+    <head>
+        {% if settings.dashboard.WebsiteSettings.tracking_id %}
+            <!-- Global site tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.dashboard.WebsiteSettings.tracking_id }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '{{ settings.dashboard.WebsiteSettings.tracking_id }}');
+            </script>
+        {% endif %}
+        <meta charset="utf-8" />
+        <title>
+            {% block title %}
+                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+            {% endblock %}
+            {% block title_suffix %}
+                {% with self.get_site.site_name as site_name %}
+                    {% if site_name %}- {{ site_name }}{% endif %}
+                {% endwith %}
+            {% endblock %}
+        </title>
+        {% image settings.dashboard.WebsiteSettings.site_icon width-180 format-png as favicon_180 %}
+        {% image settings.dashboard.WebsiteSettings.site_icon width-32 format-png as favicon_32 %}
+        {% image settings.dashboard.WebsiteSettings.site_icon width-16 format-png as favicon_16 %}
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ favicon_180.url }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ favicon_32.url }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ favicon_16.url }}">
+
+        <meta name="description" content="{{ self.search_description }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content="Web Mastered Engine v{% get_engine_version %}" />
+        <meta name=”robots” content="index, follow">
+
+        {# Global stylesheets #}
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
+        {% compress css %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/engine.css' %}">
+            <style type="text/x-scss" media="screen">
+                $primary: {{ settings.dashboard.WebsiteSettings.primary }};
+                $secondary: {{ settings.dashboard.WebsiteSettings.secondary }};
+                $success: {{ settings.dashboard.WebsiteSettings.success }};
+                $info: {{ settings.dashboard.WebsiteSettings.info }};
+                $warning: {{ settings.dashboard.WebsiteSettings.warning }};
+                $danger: {{ settings.dashboard.WebsiteSettings.danger }};
+                $light: {{ settings.dashboard.WebsiteSettings.light }};
+                $dark: {{ settings.dashboard.WebsiteSettings.dark }};
+                @import "engine/static/scss/bootstrap/bootstrap.scss";
+            </style>
+            <!-- Adding an @import in the inline CSS is quite inefficient, but doing it this way allows
+                    for the Bootstrap theme colours to be overriden. Find a way and hange this so that bootstrap.scss 
+                    is called in a seperate <link> tag, like this:
+                        <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/bootstrap/bootstrap.scss' %}">
+            -->
+        {% endcompress %}
+
+        {% block extra_css %}
+            {# Override this in templates to add extra stylesheets #}
+        {% endblock %}
+    </head>
+
+    <body class="{% block body_class %}{% endblock %}">
+        {% wagtailuserbar %}
+
+        <div class="container-fluid">
+            <div class="heading-container row justify-content-center bg-gradient mb-5 pb-5">
+                <div class="col-11 col-sm-9">
+                    {% comment %} Menu goes here {% endcomment %}
+                    {% main_menu apply_active_classes=True max_levels=1 add_sub_menus_inline=True template="menus/main_menu.html" %}
+                    {% block heading %}{% endblock %}
+                </div>
+            </div>
+            <div class="content-container row justify-content-center">
+                <div class="col-11 col-sm-9">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {# Global javascript #}
+        <script src="https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js" integrity="sha384-wOrLFfswE3wmvwEzqgo2kc7ksrFcx4ephHugBnWW3jY8ktO8xSi5Lny58pZSpovY" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        {% compress js %}
+            <script type="text/javascript" src="{% static 'js/engine.js' %}"></script>
+            {% block extra_js %}
+                {# Override this in templates to add extra javascript #}
+            {% endblock %}
+            <script>
+            Sentry.init({
+                dsn: "{% get_sentry_dsn %}",
+                integrations: [new Sentry.Integrations.BrowserTracing()],
+
+                // Set tracesSampleRate to 1.0 to capture 100%
+                // of transactions for performance monitoring.
+                // We recommend adjusting this value in production
+                tracesSampleRate: 1.0,
+                release: "{% get_engine_version %}",
+                environment : "{% get_sentry_release %}",
+            });
+            </script>
+        {% endcompress %}
+        <footer class="footer mt-auto pt-5 pb-5">
+            <div class="container-fluid">
+                {% flat_menu 'footer' add_sub_menus_inline=True show_multiple_levels=False apply_active_classes=True template="menus/footer_menu.html" %}
+            </div>
+        </footer>
+    </body>
+</html>

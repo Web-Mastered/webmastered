@@ -1,0 +1,45 @@
+{% load i18n %}
+{% load comments %}
+{% load comments_xtd %}
+{% for item in comments %}
+<div class="card comment-card bg-transparent w-100">
+    <a name="c{{ item.comment.id }}"></a>
+    <div class="row g-0">
+        <div class="col-md-1 my-auto">
+            <img src="{{ item.comment.user_email|xtd_comment_gravatar_url }}" class="img-fluid w-100" alt="{{ item.comment.name }}">
+        </div>
+        <div class="col-md-11">
+            <div class="card-body">
+                <div class="card-title my-auto">
+                    <h5 class="d-inline-block">{{ item.comment.name }}</h5>
+                    {% if item.comment.user and item.comment.user|has_permission:"django_comments.can_moderate" %}
+                        <span class="badge rounded-pill bg-primary d-inline-block">moderator</span>
+                    {% endif %}
+                </div>
+                <p class="card-text">
+                    {% if item.comment.is_removed %}
+                        <p class="text-muted"><em>This comment has been removed.</em></p>
+                    {% else %}
+                    <div class="content{% if not allow_feedback and not item.comment.allow_thread %} pb-3{% endif %}">
+                        {% include "includes/django_comments_xtd/comment_content.html" with content=item.comment.comment %}
+                    </div>
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    <small class="text-muted">{{ item.comment.submit_date }}</small>
+                    <small><a class="permalink" title="{% trans 'comment permalink' %}" href="{% get_comment_permalink item.comment %}">link to comment</a></small>
+                    //
+                    {% if item.comment.allow_thread and not item.comment.is_removed %}
+                        <a class="small mutedlink" href="{{ item.comment.get_reply_url }}">Reply</a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% if not item.comment.is_removed and item.children %}
+        <div class="container-fluid pl-5">
+            {% render_xtdcomment_tree with comments=item.children %}
+        </div>
+    {% endif %}
+</div>
+{% endfor %}

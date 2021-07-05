@@ -1,0 +1,231 @@
+{% load engine_metrics_tags %}
+
+{% get_cpu_data as cpu_data %}
+{% get_ram_data as ram_data %}
+{% get_disk_data as disk_data %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+<body>
+    <div class="container-fluid py-3">
+        <a href="/admin">&#8592; return to dashboard</a>
+        <h1 style="text-transform: capitalize;" class="py-5">Engine Metrics</h1>
+    </div>
+
+    <div class="container-fluid">
+        <h2 style="text-transform: capitalize;">Overview</h2>
+        <div class="row w-100">
+            <div class="col-xxl-6 col-12">
+                <div class="card h-100 p-3">
+                    <canvas id="cpuChart" class="p-2"></canvas>
+                    <div class="card-body">
+                        <h5 class="card-title">Current CPU Utilisation</h5>
+                        <p class="card-text">
+                            <p class="card-text">
+                                Each processor core (CPU) is used to serve the website to a number of visitors. CPU utilisation will 
+                                increase as your website's visitor count increases. Your website will slow down if CPU utilisation is too high.
+                                <br><br>
+                                If you find that your average CPU utilisation is high and your website is slow, contact us for an upgrade to a more 
+                                powerful server with more CPUs.
+                            </p>
+                    </div>
+                    <div class="card-footer w-100 bottom-0">
+                        <p>Checked on {{ cpu_data.check_timestamp }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-12">
+                <div class="card h-100 p-3">
+                    <canvas id="cpuLoadAvgChart" class="p-2"></canvas>
+                    <div class="card-body">
+                        <h5 class="card-title">Averages CPU Load</h5>
+                        <p class="card-text">
+                            This metric shows the average CPU utilisation over the last 1 minute, 5 minutes and 15 minutes. This metric is quite useful to track how much CPU is being used
+                            over a longer period of time to account for more website visitors.
+                            <br><br>
+                            If you find that your average CPU utilisation is high and your website is slow, contact us for an upgrade to a more 
+                            powerful server with more CPUs.
+                        </p>
+                    </div>
+                    <div class="card-footer w-100 bottom-0">
+                        <p>Checked on {{ cpu_data.check_timestamp }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-12">
+                <div class="card h-100 p-3">
+                    <canvas id="ramChart" class="p-2"></canvas>
+                    <div class="card-body">
+                        <h5 class="card-title">Current RAM Utilisation</h5>
+                        <p class="card-text">
+                            RAM is a lightning fast form of storage, it is used to temporarily store webpages and other website data for rapid
+                            and almost instantaneous retrieval so your website can load as fast as possible. As your website grows, more data
+                            would have to be stored in RAM. High amounts of RAM usage can cause your website to take a longer time to load.
+                            <br><br>
+                            If you find that your RAM utilisation is high and your website is slow, contact us for an upgrade to a more 
+                            powerful server with more RAM storage.
+                        </p>
+                    </div>
+                    <div class="card-footer w-100 bottom-0">
+                        <p>Checked on {{ cpu_data.check_timestamp }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-12">
+                <div class="card h-100 p-3">
+                    <canvas id="diskChart" class="p-2"></canvas>
+                    <div class="card-body">
+                        <h5 class="card-title">Current Storage Utilisation</h5>
+                        <p class="card-text">
+                            We provide solid state drive (SSD) storage to all of our clients, this allows websites to load very fast. As your website
+                            grows with more content such as pages, users and media, more SSD storage space will be consumed. Your website will not slow
+                            when you get close to the limits, however, once you hit the limit, you will find yourself unable to create new users, pages and
+                            upload new media.
+                            <br><br>
+                            If you find that your storage utilisation is high and you're unable to grow your website further, contact us for an upgrade to a more 
+                            powerful server with more SSD storage space.
+                        </p>
+                    </div>
+                    <div class="card-footer w-100 bottom-0">
+                        <p>Checked on {{ cpu_data.check_timestamp }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-12">
+                <div class="card h-100 p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Other Metrics</h5>
+                        <p class="card-text">
+                            To protect your privacy, we do not track your visitor's data. If you'd like to track your visitors, we suggest creating an account with Google Analytics, and
+                            copy your Google Tracking ID, paste it in the textbox input named "Tracking ID" in Engine > Settings > Website Settings > Analytics.
+                            <br><br>
+                            Engine has full support for Google Analytics, once the Tracking ID is set correctly in Engine's settings, you will start to see visitors being tracked in your
+                            Google Analytics Dashboard.
+                            <br><br>
+                            If you'd like to request for another metric, please let us know and we can include it. Please do bear in mind that we may not be able to track data which we think
+                            may harm your privacy unless we receive documented consent from you.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js" integrity="sha256-qoN08nWXsFH+S9CtIq99e5yzYHioRHtNB9t2qy1MSmc=" crossorigin="anonymous"></script>
+</body>
+
+<style>
+.button-longrunning {
+    display: none !important;
+}
+
+.footer__container {
+    display: none !important;
+}
+
+.tab-merged {
+    display: none;
+}
+
+.new-header {
+    display: block !important;
+}
+</style>
+
+<script>
+document.title = "WM Engine - Metrics";
+
+var cpuChart = new Chart("cpuChart", {
+    type: "bar",
+    data: {
+        labels: [{% for label in cpu_data.core_util %}'{{ label.label }}',{% endfor %}],
+        datasets: [{
+            label: 'CPU Utilisation / (%)',
+            data: [{% for value in cpu_data.core_util %}'{{ value.util }}',{% endfor %}],
+            backgroundColor: [
+                'rgb(255, 99, 132)'
+            ],
+            hoverOffset: 4,
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                min: 0,
+            }
+        },
+    }
+});
+
+
+var cpuLoadAvgChart = new Chart("cpuLoadAvgChart", {
+    type: "bar",
+    data: {
+        labels: ['1 Min', '5 Mins', '15 Mins'],
+        datasets: [{
+            label: 'Average CPU Utilisation / (%)',
+            data: [{% for key, val in cpu_data.load_avg.items %}'{{ val|safe }}',{% endfor %}],
+            backgroundColor: [
+                'rgb(255, 99, 132)'
+            ],
+            hoverOffset: 4,
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                min: 0,
+            }
+        },
+    }
+});
+
+
+var ramChart = new Chart("ramChart", {
+    type: "pie",
+    data: {
+        labels: [
+            'Used / (%)',
+            'Free / (%)',
+        ],
+        datasets: [{
+            label: 'RAM Utilisation / (%)',
+            data: [{{ ram_data.util_percent }},{{ ram_data.free_percent }}],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(75, 192, 192)'
+            ],
+            hoverOffset: 4
+        }]
+    },
+    options: {}
+});
+
+var diskChart = new Chart("diskChart", {
+    type: "pie",
+    data: {
+        labels: [
+            'Used / (%)',
+            'Free / (%)',
+        ],
+        datasets: [{
+            label: 'RAM Utilisation / (%)',
+            data: [{{ disk_data.util_percent }},{{ disk_data.free_percent }}],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(75, 192, 192)'
+            ],
+            hoverOffset: 4
+        }]
+    },
+    options: {}
+});
+
+</script>

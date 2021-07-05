@@ -1,0 +1,28 @@
+{% load wagtailimages_tags %}
+
+{% image self.image format-jpeg width-500 as img %}
+{% if self.alignment == 'image-left' %}
+    <div class="row">
+        <div class="col-6">
+            <img src="{{ img.url }}" class="figure-img img-fluid w-100" alt="{{ alt_text }}">
+            {% if self.caption %}
+                <figcaption class="figure-caption {{ self.caption_align }} mt-2">{{ self.caption }}</figcaption>
+            {% endif %}
+        </div>
+        <div class="col-6">
+            {{ self.text }}
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-6">
+            {{ self.text }}
+        </div>
+        <div class="col-6">
+            <img src="{{ img.url }}" class="figure-img img-fluid w-100" alt="{{ alt_text }}">
+            {% if self.caption %}
+                <figcaption class="figure-caption {{ self.caption_align }} mt-2">{{ self.caption }}</figcaption>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+{% load blog_tags %}
+
+{% block heading %}
+    {% for block in self.heading_blocks %}
+        {% include_block block %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="w-100">
+        <a href="{{ blog_listing_page.url }}" class="text-start float-start">&#8592; View all posts</a>
+        <a href="{{ blog_listing_page.url }}/categories" class="text-end float-end">View all categories &#8594;</a>
+    </div>
+    <br>
+    <h2>{{ errorTitle }}</h2>
+    <h3>{{ errorMessage }}</h3>
+
+{% endblock %}

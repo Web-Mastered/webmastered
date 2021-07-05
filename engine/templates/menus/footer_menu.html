@@ -1,0 +1,23 @@
+{% load menu_tags %}
+
+<div class="row justify-content-center">
+    <div class="col-11 col-sm-9">
+        <div class="row justify-content-center">
+            <div class="col-12 text-start col-sm-6 text-sm-start">
+                Engine
+                <br>
+                Website built by Web Mastered
+            </div>
+            <div class="col-12 text-start col-sm-6 text-sm-end">
+                {{ menu_instance.heading }}
+                <br>
+                {% for item in menu_items %}
+                    <a href="{{ item.href }}">{{ item.text }}</a>
+                    {% if not forloop.last %}
+                        /
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

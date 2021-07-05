@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+{% load widget_tweaks comments comments_xtd %}
+{% load blog_tags %}
+
+{% block heading %}
+    {% for block in self.heading_blocks %}
+        {% include_block block %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <hr>
+    <p class="text-center">Published: {{ self.first_published_at|date:"j" }}<sup>{{ self.first_published_at|date:"S" }}</sup> {{ self.first_published_at|date:"M Y" }}</p>
+    {% if self.owner.first_name%}
+        <p class="text-center">Author: {{ self.owner.first_name }} {{ self.owner.last_name }}</p>
+    {% else %}
+        <p class="text-center">Author: {{ self.owner.username }}</p>
+    {% endif %}
+    <p class="text-center">Category: {% if self.categories.all %}{% for category in self.categories.all %}{{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}Uncategorised{% endif %}</p>
+    <hr>
+    {% for block in self.body_blocks %}
+        {% include_block block %}
+    {% endfor %}
+    <hr>
+    <div class="w-100">
+        <a href="{{ blog_listing_page.url }}" class="text-start float-start">&#8592; View all posts</a>
+    </div>
+    <br>
+    <hr>
+    {% experimental_comments_status as global_comment_status %}
+    {% if self.enable_comments and global_comment_status %}
+        <div class="container-fluid mt-4 comment-form">
+            {% render_comment_form for page %}
+        </div>
+        
+        {% get_comment_count for page as comment_count %}
+        {% if comment_count %}
+            <hr>
+            <div class="container-fluid mt-4 media-list">
+                {% render_xtdcomment_tree for page %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
