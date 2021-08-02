@@ -39,6 +39,18 @@ DATABASES = {
     }
 }
 
+REDIS_DB_NAME = env('REDIS_DB_NAME')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/' + REDIS_DB_NAME,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
 try:
     from .local import *
 except ImportError:
