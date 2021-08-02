@@ -287,13 +287,10 @@ class BodyHTMLBlock(blocks.RawHTMLBlock):
 
 class BodyPricingBlock(blocks.StructBlock):
     pricing_tables = []
-    try:
-        if PricingTable.objects.filter().exists():
-            for table in PricingTable.objects.all():
-                this_tuple = tuple((table.html_table, table.name))
-                pricing_tables.append(this_tuple)
-    except:
-        print("ERROR")
+    if PricingTable.objects.filter().exists():
+        for table in PricingTable.objects.all():
+            this_tuple = tuple((table.html_table, table.name))
+            pricing_tables.append(this_tuple)
 
     tuple(pricing_tables)
 
