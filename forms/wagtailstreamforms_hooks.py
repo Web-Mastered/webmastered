@@ -6,6 +6,8 @@ from django.template.defaultfilters import pluralize
 
 from wagtailstreamforms.hooks import register
 
+from portal.models import Staff
+
 @register('process_form_submission')
 def email_submission(instance, form):
     """ Send an email with the submission. """
