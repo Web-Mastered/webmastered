@@ -51,7 +51,7 @@ class Staff(models.Model):
 class PricingTable(models.Model):
     name = models.CharField(help_text="Identifying name for this pricing table.", max_length=255, unique=True)
     hosting_prices = models.BooleanField(default=False, help_text="If this is set to true, this table will be displayed in the client portal under the server upgrades page.")
-    html_table = models.TextField(max_length=500000, blank=False, help_text="HTML table for pricing.", verbose_name="HTML Table")
+    html_table = models.TextField(max_length=500000, blank=False, null=False, help_text="HTML table for pricing.", verbose_name="HTML Table")
     
     def __str__(self):
         return self.name
