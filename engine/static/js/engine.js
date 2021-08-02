@@ -1,45 +1,100 @@
+$(document).ready(function(){
+    $('.toast-notifications').toast('show');
+});
 
-function darkMode() {
-    console.log('Currently in dark mode');
-    $( "body" ).removeClass( "bg-light text-dark" );
-    $( ".heading-container" ).removeClass( "bg-light text-dark" );
-    $( ".content-container" ).removeClass( "bg-light text-dark" );
-    $( ".heading-nav" ).removeClass( "navbar-light" );
-    $( ".blog-post-card" ).removeClass( "bg-light border-dark" );
-    $( "body" ).addClass( "bg-dark text-light" );
-    $( ".heading-container" ).addClass( "bg-dark text-light" );
-    $( ".content-container" ).addClass( "bg-dark text-light" );
-    $( ".heading-nav" ).addClass( "navbar-dark" );
-    $( ".blog-post-card" ).addClass( "bg-dark border-light" );
+// You can also pass an optional settings object
+// below listed default settings
+AOS.init({
+    // Global settings:
+    disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
+    startEvent: 'DOMContentLoaded', // name of the event dispatched on the document, that AOS should initialize on
+    initClassName: 'aos-init', // class applied after initialization
+    animatedClassName: 'aos-animate', // class applied on animation
+    useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
+    disableMutationObserver: false, // disables automatic mutations' detections (advanced)
+    debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
+    throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+    
+  
+    // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
+    offset: 0, // offset (in px) from the original trigger point
+    delay: 0, // values from 0 to 3000, with step 50ms
+    duration: 400, // values from 0 to 3000, with step 50ms
+    easing: 'ease', // default easing for AOS animations
+    once: false, // whether animation should happen only once - while scrolling down
+    mirror: false, // whether elements should animate out while scrolling past them
+    anchorPlacement: 'center-bottom', // defines which position of the element regarding to window should trigger the animation
+  
+});
+
+function isOnScreen(elem) {
+	// if the element doesn't exist, abort
+	if( elem.length == 0 ) {
+		return;
+	}
+	var $window = jQuery(window)
+	var viewport_top = $window.scrollTop()
+	var viewport_height = $window.height()
+	var viewport_bottom = viewport_top + viewport_height
+	var $elem = jQuery(elem)
+	var top = $elem.offset().top
+	var height = $elem.height()
+	var bottom = top + height
+
+	return (top >= viewport_top && top < viewport_bottom) ||
+	(bottom > viewport_top && bottom <= viewport_bottom) ||
+	(height > viewport_height && top <= viewport_top && bottom >= viewport_bottom)
 }
 
-function lightMode() {
-    console.log('Currently in light mode');
-    $( "body" ).removeClass( "bg-dark text-light" );
-    $( ".heading-container" ).removeClass( "bg-dark text-light" );
-    $( ".content-container" ).removeClass( "bg-dark text-light" );
-    $( ".heading-nav" ).removeClass( "navbar-dark" );
-    $( ".blog-post-card" ).removeClass( "bg-dark border-light" );
-    $( "body" ).addClass( "bg-light text-dark" );
-    $( ".heading-container" ).addClass( "bg-light text-dark" );
-    $( ".content-container" ).addClass( "bg-light text-dark" );
-    $( ".heading-nav" ).addClass( "navbar-light" );
-    $( ".blog-post-card" ).addClass( "bg-light border-dark" );
+jQuery( document ).ready( function() {
+    window.addEventListener('scroll', function(e) {
+        if( isOnScreen( jQuery( '.hero-container' ) ) ) {
+            // in view
+            $(".main-nav-container").addClass("position-relative")
+            $(".main-nav-container").removeClass("position-sticky")
+            $(".main-nav-container").removeClass("top-0")
+            $(".main-nav-container").removeClass("main-nav-sticky")
+            $(".main-nav-container").removeClass("animate__animated animate__slideInDown")
+            $(".nav-sticky-border").removeClass("nav-sticky-border-style")
+        }
+        else {
+            // out of view
+            $(".main-nav-container").addClass("animate__animated animate__slideInDown")
+            $(".nav-sticky-border").addClass("nav-sticky-border-style")
+            $(".main-nav-container").removeClass("position-relative")
+            $(".main-nav-container").addClass("position-sticky")
+            $(".main-nav-container").addClass("top-0")
+            $(".main-nav-container").addClass("main-nav-sticky")
+        }
+    });
+});
+
+$("label").addClass("form-label")
+$("input").addClass("form-control")
+$("textarea").addClass("form-control")
+$("input").addClass("form-control")
+
+$("input.form-check-input").removeClass("form-control")
+
+
+function enterClientPortal() {
+    window.location='/portal/login'+ '?returnTo=' + window.location.href;
+    return false
 }
 
-// Handle dark/light mode changes when user enters website
-const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
-if (prefersDarkScheme.matches) {
-    darkMode();
-} else {
-    lightMode();
+function exitClientPortal() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnToURL = urlParams.get('returnTo')
+    if (returnToURL == null) {
+        window.location="/";
+        return false
+    }
+    window.location=returnToURL;
+    return false
 }
 
-// Handle dark/light mode changes while user is on website
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-    if (event.matches) {
-        darkMode();
-  } else {
-        lightMode();
+$(document).ready(function() {
+    if(window.location.hash.length > 0) {
+        window.scrollTo(0, $(window.location.hash).offset().top);
     }
 });

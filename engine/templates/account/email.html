@@ -1,0 +1,81 @@
+{% extends "portal/base.html" %}
+
+{% block page_title %}Email Addresses{% endblock %}
+
+{% block content %}
+    <h1>Email Addresses</h1>
+    <p class="lead">
+        The email address that you set as primary will be used to send important messages from the WM team as well as portal notifications such as password reset links, etc.
+        It is important you enter a valid email address, verify and set it as primary, otherwise you might lock yourself out of this client portal or miss important notifications
+        from the WM team.
+    </p>
+    <hr>
+    {% if user.emailaddress_set.all %}
+        <p class="lead">The following email addresses are associated with your account:</p>
+
+        <form action="{% url 'account_email' %}" class="email_list pb-2" method="post">
+            {% csrf_token %}
+            {% for emailaddress in user.emailaddress_set.all %}
+                <div class="form-check py-1">
+                    <input class="form-check-input" type="checkbox" name="email" id="email_radio_{{forloop.counter}}" value="{{emailaddress.email}}">
+                    <label class="form-check-label {% if emailaddress.primary %}primary_email{%endif%}" for="email_radio_{{forloop.counter}}">
+                        {{emailaddress.email}}
+                        {% if emailaddress.verified %}
+                            <span class="verified badge rounded-pill bg-success">Verified</span>
+                        {% else %}
+                            <span class="unverified badge rounded-pill bg-danger">Unverified</span>
+                        {% endif %}
+                        {% if emailaddress.primary %}
+                            <span class="primary badge rounded-pill bg-primary">Primary</span>
+                        {% endif %}
+                    </label>
+                </div>
+            {% endfor %}
+            <div class="col-12 buttonHolder pt-3">
+                <button class="secondaryAction btn btn-primary" type="submit" name="action_primary" >Make Primary</button>
+                <button class="secondaryAction btn btn-info" type="submit" name="action_send" >Re-send Verification</button>
+                <button class="primaryAction btn btn-danger" type="submit" name="action_remove" >Remove</button>
+            </div>
+        </form>
+
+    {% else %}
+        <p>
+            <strong>Warning:</strong> You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc.
+        </p>
+    {% endif %}
+
+    {% if can_add_email %}
+        <hr>
+        <h2>Add Email Address</h2>
+
+        <form method="post" action="{% url 'account_email' %}" class="add_email">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="col-md-12">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <div class="col-12 pt-3">
+                <button name="action_add" class="btn btn-primary" type="submit">Add</button>
+            </div>
+        </form>
+    {% endif %}
+
+
+
+
+<script type="text/javascript">
+(function() {
+  var message = "Do you really want to remove the selected e-mail address?";
+  var actions = document.getElementsByName('action_remove');
+  if (actions.length) {
+    actions[0].addEventListener("click", function(e) {
+      if (! confirm(message)) {
+        e.preventDefault();
+      }
+    });
+  }
+})();
+</script>
+{% endblock %}

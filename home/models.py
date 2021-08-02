@@ -5,7 +5,7 @@ from blocks.fields import HomePageFields
 class HomePage(Page, HomePageFields):
     """HomePage class"""
 
-    template = "flex/flex_page.html"
+    template = "home/home_page.html"
     max_count = 1
 
     subpage_types = [

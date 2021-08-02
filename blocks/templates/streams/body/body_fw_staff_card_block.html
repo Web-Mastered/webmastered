@@ -1,0 +1,33 @@
+{% load portal_tags %}
+
+<div class="container-fluid mb-5 alternate">
+    <div class="row p-3 justify-content-center">
+        <div class="row justify-content-center">
+            <div class="col-10 px-0">
+                <h2 class="">{{ self.title }}</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                    {% get_staff as staff %}
+                    {% calculate_animation_delays staff|length 4 100 as delays %}
+                    {% for staff_member in staff %}
+                        <div class="col">
+                            <div class="card h-100" data-aos="zoom-in" data-aos-delay="{{ delays|index:forloop.counter0 }}">
+                                {% if staff_member.user.wagtail_userprofile.avatar %}
+                                    <img src="{{ staff_member.user.wagtail_userprofile.avatar.url }}" class="card-img-top" alt="{{ staff_member.user.first_name }}+{{ staff_member.user.last_name }}">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/400/?text={{ staff_member.user.first_name }}+{{ staff_member.user.last_name }}" class="card-img-top" alt="{{ staff_member.user.first_name }}+{{ staff_member.user.last_name }}">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title"><p>{{ staff_member.user.first_name }} {{ staff_member.user.last_name }}</p></h5>
+                                    <h6 class="card-subtitle"><p>{% for role in staff_member.roles.all %}{{ role }}{% if not forloop.last %} &#xb7; {% endif %}{% endfor %}</p></h6>
+                                    <p class="card-text">
+                                        {{ staff_member.bio }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

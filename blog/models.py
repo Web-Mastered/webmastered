@@ -4,11 +4,12 @@ from django.conf import settings
 
 from blocks.fields import BlogListingPageFields, BlogPostPageFields
 
-from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, TabbedInterface
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.models import Page
 from wagtail.snippets.models import register_snippet
+from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register, ModelAdminGroup
 
 from django_comments_xtd.models import XtdComment
 
@@ -97,7 +98,6 @@ class BlogPostPage(Page, BlogPostPageFields):
         return context
 
 
-@register_snippet
 class BlogPostCategory(models.Model):
     """A category model to sort blog posts into categories"""
 
@@ -126,6 +126,11 @@ class BlogPostCategory(models.Model):
         verbose_name_plural = "Blog Post Categories"
         ordering = ["name"]
 
+class BlogPostCategoryAdmin(ModelAdmin):
+    model = BlogPostCategory
+    list_display = ('name', 'slug')
+    menu_label = "Blog Categories"
+    menu_icon = "folder-open-inverse"
 
 class BlogPostComment(XtdComment):
     page = ParentalKey(BlogPostPage, on_delete=models.CASCADE, related_name='blog_post_comments')
@@ -141,5 +146,18 @@ class BlogPostComment(XtdComment):
         self.page = BlogPostPage.objects.get(pk=self.object_pk)
         super(BlogPostComment, self).save(*args, **kwargs)
 
-if settings.ENABLE_EXPERIMENTAL_BLOG_COMMENTING:
-    BlogPostComment = register_snippet(BlogPostComment)
+class BlogPostCommentAdmin(ModelAdmin):
+    model = BlogPostComment
+    # list_display = ('user', 'comment')
+    menu_label = "Blog Post Comments"
+    menu_icon = "group"
+
+
+class BlogAdminGroup(ModelAdminGroup):
+    menu_label = 'Blog'
+    menu_icon = 'form'
+    items = (BlogPostCategoryAdmin)
+    if settings.ENABLE_EXPERIMENTAL_BLOG_COMMENTING:
+        items = (BlogPostCategoryAdmin, BlogPostCommentAdmin)
+
+modeladmin_register(BlogAdminGroup)

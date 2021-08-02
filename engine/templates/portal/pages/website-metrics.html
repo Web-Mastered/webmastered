@@ -1,0 +1,119 @@
+{% extends 'portal/base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block content %}
+
+    <h1>Website Metrics</h1>
+
+    <hr>
+    {% if error %}
+    <div class="alert alert-danger h-100" role="alert">
+        <h4 class="alert-heading">Error</h4>
+        <p>
+            {{ error }}
+        </p>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="card mb-3 h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">Showing Metrics From {{ metrics_date_display }}</h2>
+                            <p class="card-text pb-1">
+                                We store historical data up to 3 days old, data older is prepared to be wiped and thus inaccessible. Select a date in the date picker below
+                                to view the metrics of that date.
+                            </p>
+                            <label for="date_picker">Pick a date:</label>
+        
+                            <input type="date" id="date_picker" name="trip-start"
+                                value="{{ metrics_datepicker_value }}"
+                                min="{{ min_metrics_date }}" max="{{ max_metrics_date }}"
+                                onchange="datepickerOnChange();">
+                            {% compress js %}
+                                <script>
+                                    function datepickerOnChange() {
+                                        console.log("datepicker changed")
+                                        var date = $('#date_picker').val();
+                                        location.href = "?date=" + date;
+                                    }
+                                </script>
+                            {% endcompress %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="alert alert-info h-100" role="alert">
+                        <h4 class="alert-heading">Need Help Understanding a Metric?</h4>
+                        <p>
+                            Hey, {{ user.first_name }}! We have aim to provide you with as much metrics related to your website as possible.
+                            We do understand that a lot of these metrics can be quite difficult to understand.
+                        <hr>
+                        <p class="mb-0">
+                            Please feel free to contact us if you are unsure about a metric or two. The WM team will try our best to explain
+                            and resolve your doubts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row gx-5">
+                        <div class="col">
+                            <div class="container-fluid border border-5 border-success rounded-5 p-3">
+                                <h5 class="text-start">Page Views</h5>
+                                <h3 class="text-end">{{ page_views }}</h3>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="container-fluid border border-5 border-primary rounded-5 p-3">
+                                <h5 class="text-start">Unique Visitors</h5>
+                                <h3 class="text-end">{{ unique_visitors }}</h3>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="container-fluid border border-5 border-info rounded-5 p-3">
+                                <h5 class="text-start">Total Requests</h5>
+                                <h3 class="text-end">{{ total_requests }}</h3>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="container-fluid border border-5 border-danger rounded-5 p-3">
+                                <h5 class="text-start">Total Threats</h5>
+                                <h3 class="text-end">{{ total_threats }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">Web Traffic Requests by Country</h2>
+                    <div class="d-flex w-100 h-100 justify-content-center">{{ country_requests_24h_map | safe }}</div>
+                    <div class="mb-3">{{ browser_requests_24h_table | safe }}</div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">Hourly Web Traffic</h2>
+                    <div class="mb-3">{{ hourly_requests_table | safe }}</div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">Web Traffic Browser Types</h2>
+                    <div class="mb-3">{{ browser_map_table | safe }}</div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">Firewall Events</h2>
+                    <div class="mb-3">{{ firewall_events_table | safe }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

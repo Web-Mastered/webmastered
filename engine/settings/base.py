@@ -48,6 +48,12 @@ INSTALLED_APPS = [
     'blocks',
     'flex',
     'blog',
+    'forms',
+    'portal',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
     'wagtailmenus',
     'compressor',
@@ -55,10 +61,13 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_comments_xtd',
     'django_comments',
+    'wagtailstreamforms',
+    'django_tables2',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.settings', 
+    "wagtail.contrib.routable_page",
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -115,6 +124,14 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'engine.wsgi.application'
@@ -201,7 +218,7 @@ MEDIA_URL = '/media/'
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "engine"
+WAGTAIL_SITE_NAME = "webmastered"
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
@@ -233,7 +250,7 @@ if ENABLE_EXPERIMENTAL_BLOG_COMMENTING:
     COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
                         b"Aequam memento rebus in arduis servare mentem.")
     # COMMENTS_XTD_FROM_EMAIL = "engine-noreply@" + str(urlparse(BASE_URL).netloc)
-    COMMENTS_XTD_FROM_EMAIL = "wm-engine@email.com"
+    COMMENTS_XTD_FROM_EMAIL = env('EMAIL_FROM_USER')
 
 DISK_MOUNT_POINT = env('METRICS_DISK_MOUNT_POINT')
 
@@ -245,3 +262,40 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 DEFAULT_FROM_EMAIL = env('EMAIL_FROM_USER')
 
+WAGTAILSTREAMFORMS_ADMIN_MENU_LABEL = 'Contact Forms'
+WAGTAILSTREAMFORMS_ENABLE_FORM_PROCESSING = True
+WAGTAILSTREAMFORMS_ENABLE_BUILTIN_HOOKS = True
+WAGTAILSTREAMFORMS_FORM_TEMPLATES = (
+    # ('streamforms/form_block.html', 'Default Form Template'),  # default
+    ('custom_form_block.html', 'Default Form Template'),
+)
+
+# AUTH_USER_MODEL = 'portal.User'
+# WAGTAIL_USER_EDIT_FORM = 'portal.forms.CustomUserEditForm'
+# WAGTAIL_USER_CREATION_FORM = 'portal.forms.CustomUserCreationForm'
+# WAGTAIL_USER_CUSTOM_FIELDS = ['bio', 'roles']
+
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+LOGIN_URL = '/portal/login/'
+LOGIN_REDIRECT_URL = '/portal/'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
+ACCOUNT_LOGOUT_REDIRECT_URL = '/portal/login/'
+ACCOUNT_PRESERVE_USERNAME_CASING = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_USERNAME_BLACKLIST = ["admin", "god"]
+ACCOUNT_USERNAME_MIN_LENGTH = 2
+ACCOUNT_ADAPTER = 'portal.custom_account_adapters.NoNewUsersAccountAdapter'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+STRIPE_API_KEY = env('STRIPE_API_KEY')
+
+CLOUDFLARE_EMAIL = env('CLOUDFLARE_EMAIL')
+CLOUDFLARE_ORIGIN_API_TOKEN = env('CLOUDFLARE_ORIGIN_API_TOKEN')
+
+DIGITALOCEAN_ACCESS_TOKEN = env('DIGITALOCEAN_ACCESS_TOKEN')

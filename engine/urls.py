@@ -24,7 +24,7 @@ urlpatterns = [
     path('comments/', include('django_comments_xtd.urls')),
 
     path('wm-engine-metrics/', metrics),
-
+    path('portal/', include('portal.urls')),
 ]
 
 

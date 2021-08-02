@@ -1,0 +1,1 @@
+;Sentry.init({dsn:"",integrations:[new Sentry.Integrations.BrowserTracing()],tracesSampleRate:1.0,release:"1.0.0",environment:"development",});;

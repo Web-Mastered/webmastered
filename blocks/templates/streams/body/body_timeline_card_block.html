@@ -1,0 +1,33 @@
+{% load wagtailimages_tags %}
+{% load block_tags %}
+
+{% get_counter_padding self.events|length as padding %}
+{% for event in self.events %}
+<div class="container-fluid mb-5 timeline-event" {% if event.animated %}data-aos="zoom-in"{% endif %}>
+    <div class="row p-3 justify-content-center">
+        <div class="row justify-content-center">
+            <div class="col-sm-10 p-5 bg-secondary shadow-lg">
+                <div class="row">
+                    <div class="col-12 d-flex flex-wrap align-items-center">
+                        <div class="row">
+                            <div class="col-lg-6 col-12">
+                                <div class="row w-100">
+                                    <p class="display-6 timeline-numbering">{{ padding }}{{ forloop.counter }}</p>
+                                    {{ event.title }}
+                                    {{ event.text }}
+                                </div>
+                            </div>
+                            <div class="d-none d-lg-flex flex-wrap align-items-center col-lg-6">
+                                <div class="row w-100">
+                                    {% image event.image width-1000 format-png as event_image %}
+                                    <img class="img-fluid" src="{{ event_image.url }}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

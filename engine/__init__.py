@@ -40,7 +40,7 @@ to data loss. Web Mastered Ltd reserve the right to terminate any warranties, ag
 subscriptions if the terms and conditions have been breached.
 """
 __copyright__ = 'Copyright (c) 2021-present, Web Mastered Ltd. All rights reserved.'
-__client__ = ''
+__client__ = 'Web Mastered Ltd.'
 
 TITLE = __title__
 VERSION = __version__

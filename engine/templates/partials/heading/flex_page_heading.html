@@ -1,0 +1,40 @@
+{% load wagtailimages_tags %}
+{% load blog_tags %}
+{% load wagtailcore_tags %}
+
+
+
+<div class="container-fluid mb-5 bg-transparent">
+    <div class="row px-3 justify-content-center hero-container">
+        <div class="col-12 rounded-5 p-0 hero parallax">
+            <div class="w-100 h-100 rounded-5 parallax-content" data-aos="fade-zoom-in" data-aos-delay="500">
+                <div class="row p-5 align-items-center h-100">
+                {% for block in self.heading_blocks %}
+                    {% if block.block_type == 'heading_featured_image' %}
+                        {% image block.value.image width-800 as featured_img %}
+                        {% set_featured_img_url featured_img.url as catch %}
+                    {% endif %}
+                    {% if block.block_type == 'heading_subtitle' %}
+                        {% set_subtitle block.value as catch %}
+                    {% endif %}
+                    {% if block.block_type == 'heading_title' %}
+                        {% set_title block.value as catch %}
+                    {% endif %}
+                {% endfor %}
+                {% get_featured_img_url as url %}
+                {% get_subtitle as subtitle %}
+                {% get_title as title %}
+                    <div class="col-lg-6 col-12">
+                        <h1 class="display-3 flex-hero-heading" data-aos="fade-right" data-aos-delay="500">{{ title }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .parallax {
+        background-image: url("{% if url %}{{ url }}{% endif %}") !important;
+    }
+</style>

@@ -1,0 +1,66 @@
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+{% load blog_tags %}
+
+{% load static %}
+
+
+{% for block in self.body_blocks %}
+    {% if block.block_type == 'fw_card_grid' %}
+        {% include_block block %}
+    {% else %}
+        {% if block.block_type == 'body_timeline_card' %}
+            {% include_block block %}
+        {% else %}
+            {% if block.block_type == 'fw_staff_card_grid' %}
+                {% include_block block %}
+            {% else %}
+                {% if block.block_type == 'body_title' %}
+                    <div class="container-fluid text-dark">
+                        <div class="row p-3 pb-0 justify-content-center">
+                            <div class="row justify-content-center">
+                                <div class="col-10 px-0">
+                                    <div class="row">
+                                        <div class="col-12 d-flex flex-wrap align-items-center">
+                                            {% include_block block %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if block.block_type == 'body_paragraph' %}
+                    <div class="container-fluid mb-5 text-dark">
+                        <div class="row p-3 pt-0 justify-content-center">
+                            <div class="row justify-content-center">
+                                <div class="col-10 px-0">
+                                    <div class="row">
+                                        <div class="col-12 d-flex flex-wrap align-items-center">
+                                            {% include_block block %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <div class="container-fluid mb-5 text-dark">
+                            <div class="row p-3 justify-content-center">
+                                <div class="row justify-content-center">
+                                    <div class="col-10 px-0">
+                                        <div class="row">
+                                            <div class="col-12 d-flex flex-wrap align-items-center">
+                                                {% include_block block %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endfor %}

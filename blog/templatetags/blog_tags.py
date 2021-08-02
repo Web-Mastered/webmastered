@@ -57,3 +57,4 @@ def experimental_comments_status():
     """Returns the global enable/disable status of the comments system"""
     commenting_status = settings.ENABLE_EXPERIMENTAL_BLOG_COMMENTING
     return commenting_status
+

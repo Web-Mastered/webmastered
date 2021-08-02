@@ -3,9 +3,10 @@
 {% load engine_metrics_tags %}
 {% load wagtailimages_tags %}
 {% load compress %}
+{% load wagtailcore_tags %}
 
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en">
     <head>
         {% if settings.dashboard.WebsiteSettings.tracking_id %}
             <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -41,7 +42,9 @@
         <meta name=”robots” content="index, follow">
 
         {# Global stylesheets #}
-        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         {% compress css %}
             <link rel="stylesheet" type="text/css" href="{% static 'css/engine.css' %}">
             <style type="text/x-scss" media="screen">
@@ -54,6 +57,80 @@
                 $light: {{ settings.dashboard.WebsiteSettings.light }};
                 $dark: {{ settings.dashboard.WebsiteSettings.dark }};
                 @import "engine/static/scss/bootstrap/bootstrap.scss";
+
+                body p {
+                    color: {{ settings.dashboard.WebsiteSettings.dark }};
+                }
+
+                body h2 {
+                    color: {{ settings.dashboard.WebsiteSettings.primary }};
+                }
+
+                .btn-portal {
+                    background-color: {{ settings.dashboard.WebsiteSettings.primary }} !important;
+                    color: {{ settings.dashboard.WebsiteSettings.light }} !important;
+                }
+
+                .btn-outline-portal {
+                    background-color: transparent !important;
+                    color: {{ settings.dashboard.WebsiteSettings.primary }} !important;
+                    border-color: {{ settings.dashboard.WebsiteSettings.primary }} !important;
+                }
+
+                .btn-portal:hover {
+                    color: {{ settings.dashboard.WebsiteSettings.secondary }} !important;
+                }
+
+                .hero {
+                    color: {{ settings.dashboard.WebsiteSettings.light }};
+                    background-color: {{ settings.dashboard.WebsiteSettings.primary }};
+                }
+
+                .hero b {
+                    color: {{ settings.dashboard.WebsiteSettings.secondary }};
+                }
+
+                .hero h1 {
+                    color: {{ settings.dashboard.WebsiteSettings.light }};
+                }
+
+                .hero h2 {
+                    color: {{ settings.dashboard.WebsiteSettings.light }};
+                }
+
+                .hero .btn {
+                    background-color: {{ settings.dashboard.WebsiteSettings.light }};
+                    color: {{ settings.dashboard.WebsiteSettings.primary }};
+                }
+
+                .hero .btn p {
+                    color: {{ settings.dashboard.WebsiteSettings.primary }};
+                }
+
+                .hero p {
+                    color: {{ settings.dashboard.WebsiteSettings.light }};
+                }
+
+                .hero a {
+                    color: {{ settings.dashboard.WebsiteSettings.light }};
+                }
+
+                .nav-sticky-border-style {
+                    background-color: {{ settings.dashboard.WebsiteSettings.light }};
+                    border-color: {{ settings.dashboard.WebsiteSettings.primary }};
+                }
+
+                .alternate {
+                    background-color: {{ settings.dashboard.WebsiteSettings.secondary }};
+                }
+
+                .alternate .feature {
+                    background-color: {{ settings.dashboard.WebsiteSettings.light }};
+                }
+
+                .alternate h5 p {
+                    color: {{ settings.dashboard.WebsiteSettings.primary }};
+                }
             </style>
             <!-- Adding an @import in the inline CSS is quite inefficient, but doing it this way allows
                     for the Bootstrap theme colours to be overriden. Find a way and hange this so that bootstrap.scss 
@@ -61,57 +138,62 @@
                         <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/bootstrap/bootstrap.scss' %}">
             -->
         {% endcompress %}
-
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
         {% endblock %}
     </head>
 
-    <body class="{% block body_class %}{% endblock %}">
+    <body class="bg-light {% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
-        <div class="container-fluid">
-            <div class="heading-container row justify-content-center bg-gradient mb-5 pb-5">
-                <div class="col-11 col-sm-9">
-                    {% comment %} Menu goes here {% endcomment %}
-                    {% main_menu apply_active_classes=True max_levels=1 add_sub_menus_inline=True template="menus/main_menu.html" %}
-                    {% block heading %}{% endblock %}
-                </div>
-            </div>
-            <div class="content-container row justify-content-center">
-                <div class="col-11 col-sm-9">
-                    {% block content %}{% endblock %}
+        <div class="container-fluid main-nav-container">
+            <div class="row p-3 justify-content-center">
+                <div class="row justify-content-center nav-sticky-border ">
+                    <div class="col-10 px-0">
+                        {% main_menu apply_active_classes=True max_levels=1 add_sub_menus_inline=True template="menus/main_menu.html" %}
+                    </div>
                 </div>
             </div>
         </div>
 
+        {% block heading %}{% endblock %}
+
+
+        {% block content %}{% endblock %}
+
+        {% flat_menu 'footer' template="menus/footer_menu.html" max_levels=2 add_sub_menus_inline=True show_menu_heading=False fall_back_to_default_site_menus=True %}
+
+        {% include 'partials/content/messages.html' %}
+
+        <!-- <footer class="footer mt-auto pt-5 pb-5">
+            <div class="container-fluid">
+                {% flat_menu 'footer' add_sub_menus_inline=True show_multiple_levels=False apply_active_classes=True template="menus/footer_menu.html" %}
+            </div>
+        </footer> -->
+
         {# Global javascript #}
         <script src="https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js" integrity="sha384-wOrLFfswE3wmvwEzqgo2kc7ksrFcx4ephHugBnWW3jY8ktO8xSi5Lny58pZSpovY" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
         {% compress js %}
             <script type="text/javascript" src="{% static 'js/engine.js' %}"></script>
             {% block extra_js %}
                 {# Override this in templates to add extra javascript #}
             {% endblock %}
             <script>
-            Sentry.init({
-                dsn: "{% get_sentry_dsn %}",
-                integrations: [new Sentry.Integrations.BrowserTracing()],
+                Sentry.init({
+                    dsn: "{% get_sentry_dsn %}",
+                    integrations: [new Sentry.Integrations.BrowserTracing()],
 
-                // Set tracesSampleRate to 1.0 to capture 100%
-                // of transactions for performance monitoring.
-                // We recommend adjusting this value in production
-                tracesSampleRate: 1.0,
-                release: "{% get_engine_version %}",
-                environment : "{% get_sentry_release %}",
-            });
+                    // Set tracesSampleRate to 1.0 to capture 100%
+                    // of transactions for performance monitoring.
+                    // We recommend adjusting this value in production
+                    tracesSampleRate: 1.0,
+                    release: "{% get_engine_version %}",
+                    environment : "{% get_sentry_release %}",
+                });
             </script>
         {% endcompress %}
-        <footer class="footer mt-auto pt-5 pb-5">
-            <div class="container-fluid">
-                {% flat_menu 'footer' add_sub_menus_inline=True show_multiple_levels=False apply_active_classes=True template="menus/footer_menu.html" %}
-            </div>
-        </footer>
     </body>
 </html>

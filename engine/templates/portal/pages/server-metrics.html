@@ -1,0 +1,317 @@
+{% extends 'portal/base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block content %}
+
+    <h1>Server Metrics</h1>
+
+    <hr>
+    {% if error %}
+    <div class="alert alert-danger h-100" role="alert">
+        <h4 class="alert-heading">Error</h4>
+        <p>
+            {{ error }}
+        </p>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="card mb-3 h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">Showing Latest Metrics</h2>
+                            <p class="card-text pb-1">
+                                To protect your privacy when using our services, we do not store these metrics data. When visiting this metrics
+                                page, the latest metrics data is fetched from your Engine website. This data is then displayed below. To update the data
+                                please refresh this page.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="alert alert-info h-100" role="alert">
+                        <h4 class="alert-heading">Need Help Understanding a Metric?</h4>
+                        <p>
+                            Hey, {{ user.first_name }}! We have aim to provide you with as much metrics related to your server as possible.
+                            We do understand that a lot of these metrics can be quite difficult to understand.
+                        <hr>
+                        <p class="mb-0">
+                            Please feel free to contact us if you are unsure about a metric or two. The WM team will try our best to explain
+                            and resolve your doubts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row gx-5">
+                        <div class="col">
+                            <div class="container-fluid border border-5 border-success rounded-5 p-3">
+                                <h5 class="text-start">CPU</h5>
+                                <h3 class="text-end">{{ cpu_count }} Core{{ cpu_count|pluralize }}</h3>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="container-fluid border border-5 border-primary rounded-5 p-3">
+                                <h5 class="text-start">RAM</h5>
+                                <h3 class="text-end">{{ ram_total }} GB</h3>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="container-fluid border border-5 border-info rounded-5 p-3">
+                                <h5 class="text-start">Storage</h5>
+                                <h3 class="text-end">{{ disk_total }} GB</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">CPU Core Utilisation</h2>
+                            <canvas id="cpuChart" class="p-2"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">CPU Load Averages</h2>
+                            <canvas id="cpuLoadAvgChart" class="p-2"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="alert alert-info h-100" role="alert">
+                        <h4 class="alert-heading">About CPU Load Metrics</h4>
+                        <p>
+                            Each CPU consists of cores, each core is responsible for carrying out computational tasks.
+                            The more cores you have, the more simultaneous visitos the server can handle. The 
+                            "CPU Core Utilisation" metric shows the current utilisation on each core. The "CPU Load Averages"
+                            metric shows the average load across all CPU cores in the last 1 minute, 5 minutes and 15 minutes.
+                            <hr>
+                            The more visitors your website gets, the more utilised a CPU becomes If you notice that your 
+                            "CPU Core Utilisation" and "CPU Load Averages" metrics are very high and your load speeds are 
+                            slower, please contact us and we can upgrade you to a more powerful server.
+                            <hr>
+                            <a href="{% url 'portal_server_upgrades' %}">Click here to go to the upgrades page.</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="card mb-3 h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">RAM Utilisation</h2>
+                            <canvas id="ramChart" class="p-2"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h2 class="card-title">RAM Utilisation Values</h2>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">Value</th>
+                                        <th scope="col" class="text-center">Bytes</th>
+                                        <th scope="col" class="text-center">Gigabytes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" class="text-center">Total</th>
+                                        <td>{{ ram_total_bytes }}</td>
+                                        <td>{{ ram_total_gigabytes }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-center">Available</th>
+                                        <td>{{ ram_avail_bytes }}</td>
+                                        <td>{{ ram_avail_gigabytes }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-center">Used</th>
+                                        <td>{{ ram_used_bytes }}</td>
+                                        <td>{{ ram_used_gigabytes }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">About RAM Metrics</h4>
+                        <p>
+                            RAM is a type of storage that's used for rapid and almost instantaneous data storage and
+                            retrieval, it is magnitudes faster than the SSD disk, but also much more expensive, and thus
+                            comes in smaller sizes than SSD. The more RAM you have, more data can be stored as cache.
+                            Data such as webpages which are stored in RAM can be retrieved almost instantaneously,
+                            resulting in faster page load times.
+                            <hr>
+                            As your website gets bigger, more RAM will start to get consumed. If you find that 
+                            your RAM utilisation is very high, and your website is loading slower, please
+                            contact us and we can upgrade you to a more powerful server.
+                            <hr>
+                            <a href="{% url 'portal_server_upgrades' %}">Click here to go to the upgrades page.</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="card mb-3 h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">Storage Utilisation</h2>
+                            <canvas id="diskChart" class="p-2"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h2 class="card-title">Storage Utilisation Values</h2>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">Value</th>
+                                        <th scope="col" class="text-center">Bytes</th>
+                                        <th scope="col" class="text-center">Gigabytes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" class="text-center">Total</th>
+                                        <td>{{ disk_total_bytes }}</td>
+                                        <td>{{ disk_total_gigabytes }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-center">Available</th>
+                                        <td>{{ disk_avail_bytes }}</td>
+                                        <td>{{ disk_avail_gigabytes }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-center">Used</th>
+                                        <td>{{ disk_used_bytes }}</td>
+                                        <td>{{ disk_used_gigabytes }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">About Storage Metrics</h4>
+                        <p>
+                            All data is stored in solid-state drives. SSD storage is much faster than hard-disk drives (HDD)
+                            and thus allows for websites to load much quicker. The more pages, users and uploads, such
+                            as images and documents you have in your Engine website, the more storage needed.
+                            <hr>
+                            As your website gets bigger, available storage space will start reducing in size. If you find that 
+                            your storage utilisation is very high, and you're unable to grow your website further, please
+                            contact us and we can upgrade you to a more powerful server.
+                            <hr>
+                            <a href="{% url 'portal_server_upgrades' %}">Click here to go to the upgrades page.</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js" integrity="sha256-qoN08nWXsFH+S9CtIq99e5yzYHioRHtNB9t2qy1MSmc=" crossorigin="anonymous"></script>
+    {% compress js %}
+    <script>
+        var cpuChart = new Chart("cpuChart", {
+            type: "bar",
+            data: {
+                labels: [{% for label in cpu_data.core_util %}'{{ label.label }}',{% endfor %}],
+                datasets: [{
+                    label: 'CPU Utilisation / (%)',
+                    data: [{% for value in cpu_data.core_util %}'{{ value.util }}',{% endfor %}],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)'
+                    ],
+                    hoverOffset: 4,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        min: 0,
+                    }
+                },
+            }
+        });
+        var cpuLoadAvgChart = new Chart("cpuLoadAvgChart", {
+            type: "bar",
+            data: {
+                labels: ['1 Min', '5 Mins', '15 Mins'],
+                datasets: [{
+                    label: 'Average CPU Utilisation / (%)',
+                    data: [{% for key, val in cpu_data.load_avg.items %}'{{ val|safe }}',{% endfor %}],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)'
+                    ],
+                    hoverOffset: 4,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        min: 0,
+                    }
+                },
+            }
+        });
+        var ramChart = new Chart("ramChart", {
+            type: "pie",
+            data: {
+                labels: [
+                    'Used / (%)',
+                    'Free / (%)',
+                ],
+                datasets: [{
+                    label: 'RAM Utilisation / (%)',
+                    data: [{{ ram_data.util_percent }},{{ ram_data.free_percent }}],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {}
+        });
+        var diskChart = new Chart("diskChart", {
+            type: "pie",
+            data: {
+                labels: [
+                    'Used / (%)',
+                    'Free / (%)',
+                ],
+                datasets: [{
+                    label: 'RAM Utilisation / (%)',
+                    data: [{{ disk_data.util_percent }},{{ disk_data.free_percent }}],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {}
+        });
+    </script>
+    {% endcompress %}
+
+    {% endif %}
+{% endblock %}

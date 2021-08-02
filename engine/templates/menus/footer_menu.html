@@ -1,5 +1,7 @@
 {% load menu_tags %}
+{% load wagtailimages_tags %}
 
+{% comment %}
 <div class="row justify-content-center">
     <div class="col-11 col-sm-9">
         <div class="row justify-content-center">
@@ -21,3 +23,83 @@
         </div>
     </div>
 </div>
+{% endcomment %}
+
+<footer class="container-fluid bg-transparent">
+    <div class="row px-3 justify-content-center">
+        <div class="col-12 col-md rounded-half-5 hero">
+            <div class="row p-5">
+                <div class="col-12 col-md">
+                    {% image settings.dashboard.WebsiteSettings.logo width-500 format-png as logo_100 %}
+                    <img class="img-fluid mb-1 mb-md-3" width="100" src="{{ logo_100.url }}">
+                    <h3>Web Mastered Ltd.</h3>
+                    <p class="d-block mb-3">&copy; 2021, All rights reserved.</p>
+                </div>
+                {% comment %}
+                    <div class="col-6 col-md">
+                        <h5>Services</h5>
+                        <hr>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="" href="#">Designing</a></li>
+                            <li><a class="" href="#">Development</a></li>
+                            <li><a class="" href="#">SEO</a></li>
+                            <li><a class="" href="#">Engine CMS</a></li>
+                            <li><a class="" href="#">Hosting</a></li>
+                        </ul>
+                    </div>
+                {% endcomment %}
+                {% for item in menu_items %}
+                    <div class="col-6 col-md">
+                        <a href="{{ item.href }}"><h5>{{ item.text }}</h5></a>
+                        <hr>
+                        <ul class="list-unstyled text-small">
+                            {% comment %}
+                                <li><a class="" href="#">Designing</a></li>
+                                <li><a class="" href="#">Development</a></li>
+                                <li><a class="" href="#">SEO</a></li>
+                                <li><a class="" href="#">Engine CMS</a></li>
+                                <li><a class="" href="#">Hosting</a></li>
+                            {% endcomment %}
+                            {% for page in item.sub_menu.items %}
+                                <li><a class="" href="{{ page.href }}">{{ page.text }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+                <div class="col-6 col-md">
+                    <h5>Resources</h5>
+                    <hr>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="" href="#">Get support</a></li>
+                        <li><a class="" href="#">Guide to Engine</a></li>
+                        <li><a class="" href="#">...</a></li>
+                        <li><a class="" href="#">...</a></li>
+                        <li><a class="" href="#">...</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>About</h5>
+                    <hr>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="" href="#">Meet the team</a></li>
+                        <li><a class="" href="#">Our story</a></li>
+                        <li><a class="" href="#">Talk to us</a></li>
+                        <li><a class="" href="#">Privacy</a></li>
+                        <li><a class="" href="#">Terms</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Socials</h5>
+                    <hr>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="" href="#">Email</a></li>
+                        <li><a class="" href="#">Linkedin</a></li>
+                        <li><a class="" href="#">Instagram</a></li>
+                        <li><a class="" href="#">...</a></li>
+                        <li><a class="" href="#">...</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

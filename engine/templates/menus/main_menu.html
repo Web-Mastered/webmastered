@@ -1,21 +1,26 @@
 {% load menu_tags %}
+{% load wagtailimages_tags %}
 
-<nav class="heading-nav navbar navbar-expand-lg py-5">
-    <div class="container-fluid m-0 p-0">
-        <a class="navbar-brand" href="#">Engine</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav ms-auto">
-                {% for item in menu_items %}
-                    <a class="nav-link {{ item.active_class }}" href="{{ item.href }}">{{ item.text }}</a>
-                    <!-- The ancestor menu item to the active one will be marked with with a class of 'ancestor'
-                    For example, the 'Blog' page will have the ancestor class if the page is example.com/blog/page
-                    and the 'Page' will have the active class. -->
-                {% endfor %}
-            </div>
+<nav class="navbar p-0 navbar-expand-lg navbar-light bg-transparent">
+    {% image settings.dashboard.WebsiteSettings.logo width-500 format-png as logo_100 %}
+    <a class="navbar-brand" href="#"><img class="img-fluid" src="{{ logo_100.url }}" width="100"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="fas fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav custom-main-nav">
+            {% comment %} Menu goes here {% endcomment %}
+            {% for item in menu_items %}
+                <a class="nav-link {{ item.active_class }} px-lg-3" href="{{ item.href }}">{{ item.text }}</a>
+                <!-- The ancestor menu item to the active one will be marked with with a class of 'ancestor'
+                For example, the 'Blog' page will have the ancestor class if the page is example.com/blog/page
+                and the 'Page' will have the active class. -->
+            {% endfor %}
+
+            <a class="nav-btn btn btn-portal mx-lg-2 my-2 my-lg-0" onclick="return enterClientPortal();" role="button">Client Portal</a>
+            {% if user.is_authenticated %}
+                <a class="nav-btn btn btn-outline-portal" href="{% url 'account_logout' %}" role="button">Sign out</a>
+            {% endif %}
         </div>
     </div>
 </nav>
-

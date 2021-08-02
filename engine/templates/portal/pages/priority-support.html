@@ -1,0 +1,79 @@
+{% extends 'portal/base.html' %}
+
+{% load django_tables2 %} 
+
+{% block content %}
+
+    <h1>Priority Support</h1>
+    <p class="lead">
+        As a client of WM, you have access to this page which allows you to request the WM team for
+        priority support. Simply fill out the form below and we will follow up with an email.
+    </p>
+    <hr>
+
+    <div class="row row-cols-1 g-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Your Priority Support Submissions</h5>
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <div>
+                            <strong>Click on a row to edit that entry.</strong>
+                            Once a support submission has been added to the system or edited, the WM engineers will be notified
+                            with the details. A WM engineer will follow up with an email resolving your queries.
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        {% render_table support_request_table %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {% if editting %}
+                            Update Priority Support Submission
+                        {% else %}
+                            Submit Priority Support Submission
+                        {% endif %}
+                    </h5>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in support_request_form.visible_fields %}
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                <span> {{field.errors}} </span>
+                            </div>
+                        {% endfor %}
+                        {% for hidden in support_request_form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">
+                                {% if editting %}
+                                    Update
+                                {% else %}
+                                    Submit
+                                {% endif %}
+                            </button>
+                            {% if editting %}
+                                <a href="?delete={{ edit_id }}" class="btn btn-danger" type="submit" >
+                                    Delete
+                                </a>
+                                <button class="btn btn-success" type="submit">
+                                    New
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

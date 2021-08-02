@@ -1,0 +1,27 @@
+{% load wagtailimages_tags %}
+<div class="container-fluid mb-5 {% if self.secondary_background_theme %}alternate{% endif %}">
+    <div class="row p-3 justify-content-center">
+        <div class="row justify-content-center">
+            <div class="col-10 px-0">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {% for card in self.cards %}
+                        <div class="col">
+                            <div {% if card.animated %}data-aos="zoom-in"{% endif %} class="card h-100">
+                                {% if card.image %}
+                                    {% image card.image width-500 format-png as card_image %}
+                                    <img src="{{ card_image.url }}" class="card-img-top" alt="...">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ card.title }}</h5>
+                                    <p class="card-text">
+                                        {{ card.text }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

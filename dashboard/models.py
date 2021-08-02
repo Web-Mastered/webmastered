@@ -62,6 +62,12 @@ class WebsiteSettings(BaseSetting):
         ], heading="Colours"),
     ]
 
+    class Meta:
+        """ Meta WebsiteSettings """
+        verbose_name = 'Website Settings'
+
+
+
     analytics_panels = [
         FieldRowPanel([
             FieldPanel("tracking_id"),

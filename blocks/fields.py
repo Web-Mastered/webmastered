@@ -2,13 +2,17 @@ from django.db import models
 from django import forms
 from django.conf import settings
 
-from wagtail.admin.edit_handlers import FieldPanel, HelpPanel, StreamFieldPanel, PageChooserPanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, HelpPanel, StreamFieldPanel, PageChooserPanel, MultiFieldPanel, InlinePanel
+from wagtail.core.blocks.field_block import PageChooserBlock
 from wagtail.core.fields import RichTextField, StreamField, StreamBlock
+from wagtail.core.models import Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.core import blocks
 from wagtail.images.blocks import ImageChooserBlock
+from wagtailstreamforms.blocks import WagtailFormBlock
+from modelcluster.fields import ParentalManyToManyField, ParentalKey
 
-from modelcluster.fields import ParentalManyToManyField
+from portal.models import PricingTable
 
 class HeadingTitleBlock(blocks.RichTextBlock):
     """RichText heading block"""
@@ -95,6 +99,34 @@ class HeadingFeaturedImageBlock(blocks.StructBlock):
         icon = "image"
         label = "Featured Image"
 
+class HeadingCTAButtons(blocks.StructBlock):
+    """Call-to-action (CTA) buttons for the heading hero"""
+
+    class Button(blocks.StructBlock):
+
+        button_style = (
+            ("primary", "Primary"),
+            ("secondary", "Secondary")
+        )
+
+        text = blocks.RichTextBlock(features=['bold','italic','link','superscript','subscript','strikethrough'],required=True, help_text="Add the text to be displayed in the button.")
+        link = blocks.PageChooserBlock(required=False)
+        style = blocks.ChoiceBlock(label='Choose a button style.',required=True, choices=button_style)
+
+        class Meta:
+            template = ""
+            icon = "link"
+            label = "Button"
+
+    buttons = blocks.ListBlock(
+        Button()
+    )
+
+    class Meta:
+        template = "streams/heading/heading_cta_block.html"
+        icon = "link"
+        label = "Heading Buttons"
+
 class BodyTitleBlock(blocks.RichTextBlock):
     """RichText title block"""
 
@@ -126,7 +158,7 @@ class BodyParagraphBlock(blocks.RichTextBlock):
     def __init__(self, **args):
         super().__init__(**args)
         self.features = [
-            "bold", "italic",
+            "bold", "italic", "lead",
             "ol", "ul", 
             "hr",
             "link", "document-link",
@@ -182,11 +214,125 @@ class BodyImageAndTextBlock(blocks.StructBlock):
         icon = "image"
         label = "Image & Text"
 
+
+class BodyFullWidthCardGrid(blocks.StructBlock):
+    """A full width block displaying a card grid"""
+
+    class Card(blocks.StructBlock):
+
+        image = ImageChooserBlock(required=False, help_text="Add an image.")
+        title = BodyParagraphBlock(required=False,help_text="Add some text for the card's title.",label="Card title")
+        text = BodyParagraphBlock(required=False,help_text="Add some text for the card's body.",label="Card body")
+        animated = blocks.BooleanBlock(required=False,default=True,blank=True,null=True,help_text="Select to animate on scroll.")
+
+        class Meta:
+            template = ""
+            icon = "placeholder"
+            label = "Card"
+
+    secondary_background_theme = blocks.BooleanBlock(default=True,blank=False,null=False)
+    cards = blocks.ListBlock(
+        Card()
+    )
+    
+    class Meta:
+        template = "streams/body/body_fw_card_grid_block.html"
+        icon = "table"
+        label = "Full Width Card Grid"
+
+
+class BodyTextAndFormBlock(blocks.StructBlock):
+    """Form and text block"""
+
+    align_options = (
+        ("form-left", "Form - Text"),
+        ("form-right", "Text - Form"),
+    )
+
+    form = WagtailFormBlock()
+    title = BodyTitleBlock(required=True,help_text="Add a title to display above the form.",label="Form Widget Title")
+    text = BodyParagraphBlock(required=True,help_text="Add some text to display beside the form, under the title.",label="Form Widget Body Text")
+    alignment = blocks.ChoiceBlock(label='Align the image and text.',required=False, choices=align_options)
+
+    class Meta:
+        """ Meta BodyTextAndFormBlock """
+        template = "streams/body/body_form_text_block.html"
+        icon = "image"
+        label = "Form & Text"
+
+
+
+class BodyFullWidthStaffCardBlock(blocks.StructBlock):
+    """Staff list card grid"""
+
+    title = BodyTitleBlock(required=True,help_text="Add a title to display above the staff card grid.",label="Title")
+    animated = blocks.BooleanBlock(required=False,default=True,blank=True,null=True,help_text="Select to animate on scroll.")
+
+    class Meta:
+        """ Meta BodyFullWidthSuperuserCardBlock """
+        template = "streams/body/body_fw_staff_card_block.html"
+        icon = "user"
+        label = "Full Width Staff Card Grid"
+
+
+class BodyHTMLBlock(blocks.RawHTMLBlock):
+    def __init__(self, required=True, help_text=None, editor="default", features=None, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        template = "streams/body/body_html_block.html"
+        icon = "code"
+        label = "Raw HTML"
+
+
+class BodyPricingBlock(blocks.StructBlock):
+    pricing_tables = []    
+    for table in PricingTable.objects.all():
+        this_tuple = tuple((table.html_table, table.name))
+        pricing_tables.append(this_tuple)
+
+    tuple(pricing_tables)
+
+    table = blocks.ChoiceBlock(label='Choose from the list of available pricing tables.',required=False, choices=pricing_tables)
+
+    class Meta:
+        template = "streams/body/body_pricing_block.html"
+        icon = "table"
+        label = "Pricing Table"
+
+
+class BodyTimelineCardBlock(blocks.StructBlock):
+    """A block displaying a card grid for timeline"""
+
+    class Event(blocks.StructBlock):
+
+        image = ImageChooserBlock(required=False, help_text="Add an image.")
+        title = HeadingVariableBlock(required=False,help_text="Add some text for the event card's title.",label="Card title")
+        text = BodyParagraphBlock(required=False,help_text="Add some text for the event card's body.",label="Card body")
+        animated = blocks.BooleanBlock(required=False,default=True,blank=True,null=True,help_text="Select to animate on scroll.")
+
+        class Meta:
+            template = ""
+            icon = "time"
+            label = "Event"
+
+    events = blocks.ListBlock(
+        Event()
+    )
+    
+    class Meta:
+        template = "streams/body/body_timeline_card_block.html"
+        icon = "date"
+        label = "Timeline Cards"
+
+
+
 page_heading_blocks = StreamField(
     [
         ("heading_title", HeadingTitleBlock()),
         ("heading_subtitle", HeadingSubtitleBlock()),
-        ("heading_featured_image", HeadingFeaturedImageBlock())
+        ("heading_featured_image", HeadingFeaturedImageBlock()),
+        ("heading_cta_buttons", HeadingCTAButtons()),
     ], block_counts = {
         'heading_title' : {'min_num': 1, 'max_num': 1},
         'heading_subtitle' : {'min_num': 0, 'max_num': 1},
@@ -203,6 +349,12 @@ page_body_blocks = StreamField(
         ("body_paragraph", BodyParagraphBlock()),
         ("body_wide_image", BodyWideImageBlock()),
         ("body_image_text", BodyImageAndTextBlock()),
+        ("fw_card_grid", BodyFullWidthCardGrid()),
+        ('form_text', BodyTextAndFormBlock()),
+        ('fw_staff_card_grid', BodyFullWidthStaffCardBlock()),
+        ('raw_html', BodyHTMLBlock()),
+        ('pricing_table_html', BodyPricingBlock()),
+        ('body_timeline_card', BodyTimelineCardBlock()),
     ],
     null = True,
     blank = True,
@@ -337,4 +489,6 @@ class BlogPostPageFields(models.Model):
     class Meta:
         """ Meta BlogPostPageFields """
         abstract = True
+
+
 

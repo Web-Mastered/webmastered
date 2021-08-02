@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+{% load blog_tags %}
+
+{% block heading %}
+    {% include 'partials/heading/home_page_heading.html' %}
+{% endblock %}
+
+{% block content %}
+    {% include 'partials/content/flex_page_content.html' %}
+{% endblock %}

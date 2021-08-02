@@ -1,0 +1,3 @@
+{% for button in self.buttons %}
+    <a href="{{ button.link.url }}" class="{% if button.style == 'primary' %}btn btn-primary me-3 cta-btn{% else %}cta-text{% endif %} d-inline-block">{{ button.text }}</a>
+{% endfor %}

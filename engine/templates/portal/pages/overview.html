@@ -1,0 +1,139 @@
+{% extends 'portal/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <h1>Welcome to the Client Portal, {{ user.first_name }} {{ user.last_name }}.</h1>
+
+    <hr>
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/metrics-website.jpeg' %}" class="card-img-top" alt="Metrics - Website Image">
+                <div class="card-body">
+                    <h5 class="card-title">Website</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Metrics</h6>
+                    <p class="card-text">
+                        View metrics related to your website. Metrics include, website visitor count, visitor countries,
+                        cached data and firewall events.
+                    </p>
+                    <a href="{% url 'portal_website_metrics' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/metrics-server.jpeg' %}" class="card-img-top" alt="Metrics - Server Image">
+                <div class="card-body">
+                    <h5 class="card-title">Server</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Metrics</h6>
+                    <p class="card-text">
+                        View metrics related to your server. Metrics include, CPU loads, RAM and storage usage.
+                    </p>
+                    <a href="{% url 'portal_server_metrics' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-3">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/account-billing.jpeg' %}" class="card-img-top" alt="Account - Billing Image">
+                <div class="card-body">
+                    <h5 class="card-title">Billing</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Account</h6>
+                    <p class="card-text">
+                        View and edit billing related information such as payment methods, billing information and billing history.
+                    </p>
+                    <a href="{% url 'portal_billing' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-3">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/server-upgrades.jpeg' %}" class="card-img-top" alt="Account - Server Upgrade">
+                <div class="card-body">
+                    <h5 class="card-title">Upgrades</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Account</h6>
+                    <p class="card-text">
+                        Keep up with the growth of your business by upgrading to a more powerful server.
+                    </p>
+                    <a href="{% url 'portal_server_upgrades' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-3">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/account-emails.jpeg' %}" class="card-img-top" alt="Account - Emails">
+                <div class="card-body">
+                    <h5 class="card-title">Emails</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Account</h6>
+                    <p class="card-text">
+                        Keep your email contact address updated to not miss any important messages from the WM team
+                        and the WM Client Portal.
+                    </p>
+                    <a href="{% url 'account_email' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-3">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/account-password.jpeg' %}" class="card-img-top" alt="Metrics - Server Image">
+                <div class="card-body">
+                    <h5 class="card-title">Password</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Account</h6>
+                    <p class="card-text">
+                        Keep your account safe by regularly changing your password. You can use this page to reset a forgotten
+                        password as well.
+                    </p>
+                    <a href="{% url 'account_change_password' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/dns-support.jpeg' %}" class="card-img-top" alt="Support - DNS Records Image">
+                <div class="card-body">
+                    <h5 class="card-title">DNS Records</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Support</h6>
+                    <p class="card-text">
+                        Whether it's Microsoft 365, Google Workspace or any other third-party service that requires
+                        DNS records to be added to verify the domain, we can do that for you.
+                    </p>
+                    <a href="{% url 'portal_dns_records' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/feature-support.jpeg' %}" class="card-img-top" alt="Support - Add Features Image">
+                <div class="card-body">
+                    <h5 class="card-title">Add Features</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Support</h6>
+                    <p class="card-text">
+                        If you'd like to add more features to your website or web application, we've got you covered.
+                        We can add additional functionalities to your existing website or web app.
+                    </p>
+                    <a href="{% url 'portal_add_features' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <img src="{% static 'assets/portal/img/queries-support.jpeg' %}" class="card-img-top" alt="Metrics - Server Image">
+                <div class="card-body">
+                    <h5 class="card-title">Priority Support</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Support</h6>
+                    <p class="card-text">
+                        As a valued WM client, you have access to our priority support. If you're ever unsure about any
+                        aspects of the services we offer, please don't hesitate to ask us.
+                    </p>
+                    <a href="{% url 'portal_priority_support' %}" class="card-link stretched-link">Navigate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

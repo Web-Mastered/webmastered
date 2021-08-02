@@ -1,0 +1,61 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+
+    <h1>Upgrades</h1>
+    <p class="lead">
+        Our servers are scalable and can be easily upgraded to suit the scale of your business. If you find your
+        website is running slower and you've almost reached the limits of your server hardware allocation, you can
+        fill and send the form below to upgrade your server.
+
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Quick Note</h4>
+            <p>
+                During the server upgrade process, there'll be a downtime of at least a couple minutes where your website goes offline.
+                We will try our best to minimise the downtime as much as possible. Please select a date in the form below when you are
+                happy to let us carry out the upgrades. If you change your mind about the date in the future, feel free to let us know,
+                we will choose another time.
+            </p>
+            <hr>
+            <p class="mb-0">Feel free to contact us if you have any queries.</p>
+        </div>
+    </p>
+    <hr>
+
+    <h2>Hosting Pricing</h2>
+    {{ pricing_table | safe }}
+
+    <hr>
+
+    {% if form_exists %}
+    <h2>Your Existing Upgrade Request</h2>
+    {% else %}
+    <h2>Submit New Upgrade Request</h2>
+    {% endif %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in upgrade_form.visible_fields %}
+            <div class="col-md-12 mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                <span> {{field.errors}} </span>
+            </div>
+        {% endfor %}
+        {% for hidden in upgrade_form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">
+                {% if form_exists %}
+                Update
+                {% else %}
+                Submit
+                {% endif %}
+            </button>
+        </div>
+    </form>
+    <hr>
+
+
+{% endblock %}
+

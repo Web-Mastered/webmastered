@@ -1,0 +1,159 @@
+{% load wagtailimages_tags %}
+{% load compress %}
+{% load static %}
+{% load engine_metrics_tags %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+        {% if settings.dashboard.WebsiteSettings.tracking_id %}
+            <!-- Global site tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.dashboard.WebsiteSettings.tracking_id }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '{{ settings.dashboard.WebsiteSettings.tracking_id }}');
+            </script>
+        {% endif %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+
+        <title>WM Client Portal - {% block page_title %}{{ page_title }}{% endblock %}</title>
+
+        {% image settings.dashboard.WebsiteSettings.site_icon width-180 format-png as favicon_180 %}
+        {% image settings.dashboard.WebsiteSettings.site_icon width-32 format-png as favicon_32 %}
+        {% image settings.dashboard.WebsiteSettings.site_icon width-16 format-png as favicon_16 %}
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ favicon_180.url }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ favicon_32.url }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ favicon_16.url }}">
+
+        <meta name="description" content="Client portal for the customers of Web Mastered Ltd. Manage your account and WM services from here." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content="Web Mastered Engine v{% get_engine_version %} | Client Portal" />
+        <meta name=”robots” content="index, follow">
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+        {% compress css %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/portal/style.css' %}">
+            <style type="text/x-scss" media="screen">
+                $primary: {{ settings.dashboard.WebsiteSettings.primary }};
+                $secondary: {{ settings.dashboard.WebsiteSettings.secondary }};
+                $success: {{ settings.dashboard.WebsiteSettings.success }};
+                $info: {{ settings.dashboard.WebsiteSettings.info }};
+                $warning: {{ settings.dashboard.WebsiteSettings.warning }};
+                $danger: {{ settings.dashboard.WebsiteSettings.danger }};
+                $light: {{ settings.dashboard.WebsiteSettings.light }};
+                $dark: {{ settings.dashboard.WebsiteSettings.dark }};
+                @import "engine/static/scss/bootstrap/bootstrap.scss";
+
+                body p {
+                    color: {{ settings.dashboard.WebsiteSettings.dark }};
+                }
+
+            </style>
+        {% endcompress %}
+    </head>
+    <body>
+        <div class="container-fluid h-100">
+            <div class="row h-100">
+                <div class="sidenav col-2 bg-dark text-light d-none d-lg-flex justify-content-center h-100 position-fixed float-left">
+                        <div class="container-fluid h-100 ">
+                            {% image settings.dashboard.WebsiteSettings.logo width-500 format-png as logo_100 %}
+                            <a class="d-flex justify-content-center py-5" href="/portal">
+                                <img class="img-fluid" src="{{ logo_100.url }}" width="100">
+                            </a>
+                            <hr class="d-lg-none">
+                            <button class="btn btn-primary d-lg-none" onclick="sidenav_control_collapse();" type="button" data-toggle="collapse" data-target="#sidemenu" aria-expanded="false" aria-controls="sidemenu">
+                                Hide Menu
+                            </button>
+                            <hr>
+                            <h2>Home</h2>
+                            <ul>
+                                <li class="portal-nav-item"><a href="{% url 'portal_overview' %}">Overview</a></li>
+                            </ul>
+                            <h2>Metrics</h2>
+                            <ul>
+                                <li class="portal-nav-item"><a href="{% url 'portal_website_metrics' %}">Website</a></li></li>
+                                <li class="portal-nav-item"><a href="{% url 'portal_server_metrics' %}">Server</a></li></li>
+                            </ul>
+                            <h2>Account</h2>
+                            <ul>
+                                <li class="portal-nav-item"><a href="{% url 'portal_billing' %}">Billing</a></li></li>
+                                <li class="portal-nav-item"><a href="{% url 'portal_server_upgrades' %}">Upgrades</a></li></li>
+                                <li class="portal-nav-item"><a href="{% url 'account_email' %}">Emails</a></li></li>
+                                <li class="portal-nav-item"><a href="{% url 'account_change_password' %}">Password</a></li></li>
+                                <li class="portal-nav-item"><a href="{% url 'account_logout' %}">Logout</a></li></li>
+                            </ul>
+                            <h2>Support</h2>
+                            <ul>
+                                <li class="portal-nav-item"><a href="{% url 'portal_dns_records' %}">DNS Records</a></li></li>
+                                <li class="portal-nav-item"><a href="{% url 'portal_add_features' %}">Add Features</a></li></li>
+                                <li class="portal-nav-item"><a href="{% url 'portal_priority_support' %}">Priority Support</a></li></li>
+                            </ul>
+                        </div>
+                </div>
+
+                <div class="col-12 col-lg-10 offset-lg-2">
+                    <div class="container-fluid p-5">
+                        <button class="btn btn-primary mb-3 d-lg-none" onclick="sidenav_control_show();" type="button" data-toggle="collapse" data-target="#sidemenu" aria-expanded="false" aria-controls="sidemenu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'partials/content/messages.html' %}
+        <script src="https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js" integrity="sha384-wOrLFfswE3wmvwEzqgo2kc7ksrFcx4ephHugBnWW3jY8ktO8xSi5Lny58pZSpovY" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+        {% compress js %}
+            <script type="text/javascript" src="{% static 'js/portal/script.js' %}"></script>
+            <script type="text/javascript" src="{% static 'js/engine.js' %}"></script>
+            {% block extra_js %}
+                {# Override this in templates to add extra javascript #}
+            {% endblock %}
+            <script>
+                Sentry.init({
+                    dsn: "{% get_sentry_dsn %}",
+                    integrations: [new Sentry.Integrations.BrowserTracing()],
+
+                    // Set tracesSampleRate to 1.0 to capture 100%
+                    // of transactions for performance monitoring.
+                    // We recommend adjusting this value in production
+                    tracesSampleRate: 1.0,
+                    release: "{% get_engine_version %}",
+                    environment : "{% get_sentry_release %}",
+                });
+            </script>
+        {% endcompress %}
+
+        {% if table_populated %}
+            {% compress js %}
+            <script>
+                $(document).ready(function($) {
+                    $("#PrioritySupportSubmissionsDataTable tr").click(function() {
+                        window.location = $(this).data("href");
+                    });
+                });
+
+                $(document).ready(function($) {
+                    $("#FeatureRequestDataTable tr").click(function() {
+                        window.location = $(this).data("href");
+                    });
+                });
+
+                $(document).ready(function($) {
+                    $("#DNSRecordRequestDataTable tr").click(function() {
+                        window.location = $(this).data("href");
+                    });
+                });
+            </script>
+            {% endcompress %}
+        {% endif %}
+    </body>
+</html>

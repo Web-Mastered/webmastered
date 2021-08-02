@@ -1,0 +1,103 @@
+{% extends 'portal/base.html' %}
+
+{% load django_tables2 %} 
+
+{% block content %}
+
+    <h1>DNS Records</h1>
+    <p class="lead">
+        We take the effort of managing DNS records from you to make your experience easier. Some third-party services
+        such as Google Workspace, Microsoft 365, etc, will require you to add a set of DNS records. Simply fill the form
+        below for each records you need to add and we will add it for you.
+
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Quick Note</h4>
+            <p>
+                After a DNS records is added, there is some time called propagation delay, where
+                the newly added records may take up to 48 hours to sync with the internet. If your
+                newly added DNS records aren't working even after 48 hours, please feel free to contact
+                the WM Team.
+                <hr>
+                DNS records can be daunting, if you are ever unsure about anything, please contact the WM team,
+                we have experience working with DNS records and we will guide you though the process.
+            </p>
+        </div>
+    </p>
+    <hr>
+
+    <div class="row row-cols-1 g-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Your DNS Record Submissions</h5>
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <div>
+                            <strong>Click on a row to edit that entry.</strong>
+                            Once a record has been added to the system by the WM engineers, you will see a tick under
+                            the "Added" column title and you'll also see the time and date that it was added.
+                            Once an entry has been deleted, we will remove that record from the system. Please allow at least 48 hours
+                            from the "Added timestamp" for a DNS record to propagate. 
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        {% render_table dns_table %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {% if editting %}
+                            Update DNS Record
+                        {% else %}
+                            Submit DNS Record
+                        {% endif %}
+                    </h5>
+                    <div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">DNS Type Not Listed?</h4>
+                        <div>
+                            To simplify the DNS record submission process, we've limited the list of DNS record
+                            types to the most common ones. If the record type that you're trying to add isn't in the
+                            list please contact us and we will add the record for you.
+                        </div>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in dns_form.visible_fields %}
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                <span> {{field.errors}} </span>
+                            </div>
+                        {% endfor %}
+                        {% for hidden in dns_form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">
+                                {% if editting %}
+                                    Update
+                                {% else %}
+                                    Submit
+                                {% endif %}
+                            </button>
+                            {% if editting %}
+                                <a href="?delete={{ edit_id }}" class="btn btn-danger" type="submit" >
+                                    Delete
+                                </a>
+                                <button class="btn btn-success" type="submit">
+                                    New
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

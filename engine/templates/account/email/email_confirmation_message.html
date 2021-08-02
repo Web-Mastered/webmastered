@@ -1,0 +1,22 @@
+{% extends "account/email/base_message.html" %}
+
+{% load account %}
+
+{% block content %}
+{% user_display user as user_display %}
+<h1>Hey {{ user_display }},</h1>
+<p>
+    Thank you for signing up to the Web Mastered Portal. There's one last thing to do before you can access your portal, please click the "Activate" button below to
+    verify your email address and to activate your account.
+    <br><br>
+    If you didn't create an account with us, you can ignore this email and inform us so we can flag this issue. Do note, we create an account for
+    all clients who have purchased an ongoing service from us, if you are a client but do not have access to the client portal, please click the button to activate your account.
+    <br><br>
+    <a class="btn btn-primary" href="{{ activate_url }}" role="button">Activate</a>
+    <br><br>
+    <p>
+        If the button above doesn't work for some reason, visit the following link through your internet browser:<br>
+        {{ activate_url }}
+    </p>
+</p>
+{% endblock %}
