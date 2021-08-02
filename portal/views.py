@@ -22,9 +22,8 @@ import pycountry
 from datetime import datetime, timedelta
 from urllib.request import urlopen, Request
 
-from .models import Client, DNSRecordRequest, Staff, HostingUpgradeRequest, FeatureRequests, PrioritySupportSubmissions
+from .models import Client, DNSRecordRequest, Staff, HostingUpgradeRequest, FeatureRequests, PrioritySupportSubmissions, PricingTable
 from .forms import HostingUpgradesRequestForm, DNSRecordRequestForm, DNSRecordRequestTable, FeatureRequestsForm, FeatureRequestsTable, PrioritySupportSubmissionsForm, PrioritySupportSubmissionsTable
-from portal.models import PricingTable
 
 def country_alpha2_to_name(alpha2):
     try:
