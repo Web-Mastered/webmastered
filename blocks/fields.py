@@ -286,18 +286,14 @@ class BodyHTMLBlock(blocks.RawHTMLBlock):
 
 
 class BodyPricingBlock(blocks.StructBlock):
-    pricing_tables = []
-    try:
-        if PricingTable.objects.filter().exists():
-            for table in PricingTable.objects.all():
-                this_tuple = tuple((table.html_table, table.name))
-                pricing_tables.append(this_tuple)
-    except:
-        pass
+    def get_pricing_tables():
+        pricing_tables = []
+        for table in PricingTable.objects.all():
+            this_tuple = tuple((table.html_table, table.name))
+            pricing_tables.append(this_tuple)
+        return tuple(pricing_tables)
 
-    tuple(pricing_tables)
-
-    table = blocks.ChoiceBlock(label='Choose from the list of available pricing tables.',required=False, choices=pricing_tables)
+    table = blocks.ChoiceBlock(label='Choose from the list of available pricing tables.',required=False, choices=get_pricing_tables)
 
     class Meta:
         template = "streams/body/body_pricing_block.html"
