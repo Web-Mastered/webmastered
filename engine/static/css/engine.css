@@ -225,6 +225,6 @@ footer a {
 
 
 .heading-anchor-target {
-    position:absolute; 
-    top:-150px;
+    top: -250px !important;
+    position: relative;
 }
