@@ -1,1 +1,0 @@
-function datepickerOnChange(){console.log("datepicker changed")};
