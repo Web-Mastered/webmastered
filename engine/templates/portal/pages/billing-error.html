@@ -1,0 +1,34 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+
+    <h1>Billing</h1>
+    <p class="lead">
+        We use a third-party payment gateway provider, called Stripe, to handle payments in the safest and most efficient way possible.
+        To manage your billing information, click the "Open Billing Portal" button below. From the billing portal, you can change your
+        payment method and billing information and you can view your billing history and hosting plan.
+
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Quick Note</h4>
+            <p>
+                Please note that details which are used for your billing account, such as email, can be different to that used for your WM account.
+                Any notifications regarding billing will be sent to your billing email address, and any notifications regarding your WM service will
+                be sent to the email address marked as <span class="primary badge rounded-pill bg-primary">Primary</span> in the WM Client Portal.
+            </p>
+            <hr>
+            <p class="mb-0">Feel free to contact us if you have any queries.</p>
+        </div>
+    </p>
+    <hr>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Error!</h4>
+            <p>
+                There was an error when trying to open the billing portal. Please try again later, contact the WM team if this issue continues.
+                Sorry for the inconvenience this may have caused.
+            </p>
+        </div>
+    <hr>
+    <a class="btn btn-primary" href="{% url 'portal_billing_stripe' %}">Open Billing Portal</a>
+
+{% endblock %}
+

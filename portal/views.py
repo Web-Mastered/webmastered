@@ -111,12 +111,19 @@ def stripe_customer_portal(request):
 
     returnPath = str(request.build_absolute_uri()).replace('/stripe', '')
 
-    session = stripe.billing_portal.Session.create(
-        customer=str(stripe_customer_id),
-        return_url=returnPath
-    )
+    try:
+        session = stripe.billing_portal.Session.create(
+            customer=str(stripe_customer_id),
+            return_url=returnPath
+        )
+        return redirect(session.url)
+    except:
+        template = loader.get_template('portal/pages/billing-error.html')
 
-    return redirect(session.url)
+        context = {
+            
+        }
+        return HttpResponse(template.render(context, request))
 
 
 @login_required(login_url='/portal/login')
