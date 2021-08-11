@@ -21,7 +21,6 @@ import pandas as pd
 import pycountry
 from datetime import datetime, timedelta
 from urllib.request import urlopen, Request
-from sentry_sdk import capture_exception
 
 from .models import Client, DNSRecordRequest, Staff, HostingUpgradeRequest, FeatureRequests, PrioritySupportSubmissions, PricingTable
 from .forms import HostingUpgradesRequestForm, DNSRecordRequestForm, DNSRecordRequestTable, FeatureRequestsForm, FeatureRequestsTable, PrioritySupportSubmissionsForm, PrioritySupportSubmissionsTable
@@ -119,7 +118,6 @@ def stripe_customer_portal(request):
         )
         return redirect(session.url)
     except Exception as e:
-        capture_exception(e)
         template = loader.get_template('portal/pages/billing-error.html')
         context = {
             'page_title': "Billing",
