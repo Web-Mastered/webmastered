@@ -28,7 +28,10 @@ class Anchor(Page):
     content_panels = Page.content_panels + [
         PageChooserPanel('page'),
         FieldPanel('anchor_id')
-    ]    
+    ]
+
+    def get_sitemap_urls(self, request):
+        return []
 
     def serve(self, request):
         if self.page is not None:
