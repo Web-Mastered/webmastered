@@ -31,7 +31,7 @@ class CustomDatetimeField(forms.DateField):
         self.widget = forms.widgets.DateTimeInput(attrs={'col_width': self.width})
         super().__init__(*args,**kwargs)
 
-class CustomEmailField(forms.DateField):
+class CustomEmailField(forms.EmailField):
     def __init__(self,*args,**kwargs):
         self.width = kwargs.pop('width')
         self.placeholder = kwargs.pop('placeholder')
