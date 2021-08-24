@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'blocks',
     'flex',
     'blog',
+    'wagtailstreamforms', # Needed to move this above so form fields can be overriden
     'forms',
     'portal',
 
@@ -61,7 +62,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_comments_xtd',
     'django_comments',
-    'wagtailstreamforms',
     'django_tables2',
 
     'wagtail.contrib.forms',
