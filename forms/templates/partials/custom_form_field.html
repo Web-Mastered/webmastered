@@ -1,4 +1,4 @@
-<div class="field-column-id_{{ field.name }}">
+<div class="field-column-id_{{ value.form.slug }}_{{ field.name }}">
     {{ field.label_tag }}
     {{ field }}
     {% if field.help_text %}<p class="help-text">{{ field.help_text }}</p>{% endif %}
@@ -6,13 +6,12 @@
 </div>
 
 <script>
-    var col_name = "id_{{ field.name }}";
-    var col_width = $("#id_{{ field.name }}").attr("col_width")
-    $(".field-column-id_{{ field.name }}").addClass("col-"+col_width);
+    var col_width = $(".field-column-id_{{ value.form.slug }}_{{ field.name }} #id_{{ field.name }}").attr("col_width")
+    $(".field-column-id_{{ value.form.slug }}_{{ field.name }}").addClass("col-"+col_width);
     
     // Set the "None" placeholders as ""
-    var placeholder = $("#id_{{ field.name }}").attr("placeholder")
+    var placeholder = $(".field-column-id_{{ value.form.slug }}_{{ field.name }} #id_{{ field.name }}").attr("placeholder")
     if (placeholder == "None") {
-        $("#id_{{ field.name }}").attr("placeholder", "")
+        $(".field-column-id_{{ value.form.slug }}_{{ field.name }} #id_{{ field.name }}").attr("placeholder", "")
     }
 </script>
