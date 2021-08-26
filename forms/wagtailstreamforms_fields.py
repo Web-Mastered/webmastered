@@ -1,6 +1,4 @@
-import re
 from django import forms
-from django.forms import widgets
 from wagtailstreamforms.fields import BaseField, register
 from wagtail.core import blocks
 
