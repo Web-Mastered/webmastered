@@ -92,6 +92,8 @@ class CustomMultifileField(forms.FileField):
 @register('singleline')
 class Column_SingleLineTextField(BaseField):
     field_class = CustomSinglelineField
+    icon = "pilcrow"
+    label = "Text field (single line)"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -112,6 +114,8 @@ class Column_SingleLineTextField(BaseField):
 @register('multiline')
 class MultiLineTextField(BaseField):
     field_class = CustomMultilineField
+    icon = "form"
+    label = "Text field (multiple lines)"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -134,6 +138,8 @@ class MultiLineTextField(BaseField):
 @register('date')
 class DateField(BaseField):
     field_class = CustomDateField
+    icon = "date"
+    label = "Date field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -152,6 +158,8 @@ class DateField(BaseField):
 @register('datetime')
 class DateTimeField(BaseField):
     field_class = CustomDatetimeField
+    icon = "time"
+    label = "Time field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -170,6 +178,8 @@ class DateTimeField(BaseField):
 @register('email')
 class EmailField(BaseField):
     field_class = CustomEmailField
+    icon = "mail"
+    label = "Email field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -190,6 +200,8 @@ class EmailField(BaseField):
 @register('url')
 class URLField(BaseField):
     field_class = CustomURLField
+    icon = "link"
+    label = "URL field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -210,6 +222,7 @@ class URLField(BaseField):
 @register('number')
 class NumberField(BaseField):
     field_class = forms.DecimalField
+    label = "Number field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -230,6 +243,8 @@ class NumberField(BaseField):
 @register('dropdown')
 class DropdownField(BaseField):
     field_class = CustomDropdownField
+    icon = "arrow-down-big"
+    label = "Dropdown field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -253,6 +268,8 @@ class DropdownField(BaseField):
 @register('radio')
 class RadioField(BaseField):
     field_class = CustomRadioField
+    icon = "radio-empty"
+    label = "Radio buttons"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -275,6 +292,8 @@ class RadioField(BaseField):
 @register('checkboxes')
 class CheckboxesField(BaseField):
     field_class = CustomCheckboxesField
+    icon = "tick-inverse"
+    label = "Checkboxes"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -297,6 +316,8 @@ class CheckboxesField(BaseField):
 @register('checkbox')
 class CheckboxField(BaseField):
     field_class = forms.BooleanField
+    icon = "tick-inverse"
+    label = "Checkbox field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -318,6 +339,8 @@ class CheckboxField(BaseField):
 @register('singlefile')
 class SingleFileField(BaseField):
     field_class = CustomSinglefileField
+    icon = "doc-full-inverse"
+    label = "File field"
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
@@ -339,6 +362,8 @@ class SingleFileField(BaseField):
 @register('multifile')
 class MultiFileField(BaseField):
     field_class = forms.FileField
+    icon = "doc-full-inverse"
+    label = "Files field"
 
     def get_form_block(self):
         return blocks.StructBlock(
