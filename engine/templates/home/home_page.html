@@ -2,8 +2,10 @@
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
 {% load blog_tags %}
+{% load engine_schema_tags %}
 
 {% block heading %}
+    {% render_organisation_schema %}
     {% include 'partials/heading/home_page_heading.html' %}
 {% endblock %}
 
