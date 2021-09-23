@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'django_comments_xtd',
     'django_comments',
     'django_tables2',
+    'oauth2_provider',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -102,6 +103,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
 ROOT_URLCONF = 'engine.urls'
@@ -127,6 +130,8 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = [
+    'oauth2_provider.backends.OAuth2Backend',
+
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
 

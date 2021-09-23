@@ -10,6 +10,7 @@ from wagtail.contrib.sitemaps.views import sitemap
 from search import views as search_views
 
 from dashboard.views import metrics
+from portal.views import oauth_user_resource
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
@@ -25,6 +26,9 @@ urlpatterns = [
 
     path('wm-engine-metrics/', metrics),
     path('portal/', include('portal.urls')),
+
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('o/resources/user', oauth_user_resource),
 ]
 
 

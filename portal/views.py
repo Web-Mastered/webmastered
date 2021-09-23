@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 import ast
 import CloudFlare
@@ -22,6 +23,8 @@ import pycountry
 from datetime import datetime, timedelta
 from urllib.request import urlopen, Request
 from sentry_sdk import capture_exception
+from oauth2_provider.decorators import protected_resource
+import json
 
 from .models import Client, DNSRecordRequest, Staff, HostingUpgradeRequest, FeatureRequests, PrioritySupportSubmissions, PricingTable
 from .forms import HostingUpgradesRequestForm, DNSRecordRequestForm, DNSRecordRequestTable, FeatureRequestsForm, FeatureRequestsTable, PrioritySupportSubmissionsForm, PrioritySupportSubmissionsTable
@@ -687,3 +690,15 @@ def priority_support(request):
         'table_populated': table_populated,
     }
     return HttpResponse(template.render(context, request))
+
+
+@protected_resource()
+def oauth_user_resource(request, *args, **kwargs):
+    print(request.user)
+    this_user = User.objects.get(username__iexact=request.user.username)
+    print("over here")
+    return HttpResponse(
+        json.dumps({
+            'username': this_user.username, 
+            'email': this_user.email}),
+        content_type='application/json')
