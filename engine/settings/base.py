@@ -304,10 +304,11 @@ CLOUDFLARE_EMAIL = env('CLOUDFLARE_EMAIL')
 CLOUDFLARE_ORIGIN_API_TOKEN = env('CLOUDFLARE_ORIGIN_API_TOKEN')
 
 DIGITALOCEAN_ACCESS_TOKEN = env('DIGITALOCEAN_ACCESS_TOKEN')
-
+OIDC_RSA_PRIVATE_KEY = env.str("OIDC_RSA_PRIVATE_KEY", multiline=True)
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
     "OIDC_RSA_PRIVATE_KEY": env.str("OIDC_RSA_PRIVATE_KEY", multiline=True),
+    "OAUTH2_VALIDATOR_CLASS": "portal.oauth_validators.CustomOAuth2Validator",
     "SCOPES": {
         "openid": "OpenID Connect scope",
         "read": "Read scope",
