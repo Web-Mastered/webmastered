@@ -314,3 +314,8 @@ DIGITALOCEAN_ACCESS_TOKEN = env('DIGITALOCEAN_ACCESS_TOKEN')
 #         "write": "Write scope",
 #     },
 # }
+
+OAUTH2_PROVIDER = {
+    "OIDC_ENABLED": True,
+    "OIDC_RSA_PRIVATE_KEY": os.environ.get("OIDC_RSA_PRIVATE_KEY"),
+}
