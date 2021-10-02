@@ -308,7 +308,7 @@ OIDC_RSA_PRIVATE_KEY = env.str("OIDC_RSA_PRIVATE_KEY", multiline=True)
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
     "OIDC_RSA_PRIVATE_KEY": env.str("OIDC_RSA_PRIVATE_KEY", multiline=True),
-    "OAUTH2_VALIDATOR_CLASS": "portal.oauth_validators.CustomOAuth2Validator",
+    "OAUTH2_VALIDATOR_CLASS": "portal.oauth_validator.CustomOAuth2Validator",
     "SCOPES": {
         "openid": "OpenID Connect scope",
         "read": "Read scope",
