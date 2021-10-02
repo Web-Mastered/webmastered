@@ -307,7 +307,7 @@ DIGITALOCEAN_ACCESS_TOKEN = env('DIGITALOCEAN_ACCESS_TOKEN')
 
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
-    "OIDC_RSA_PRIVATE_KEY": os.environ.get("OIDC_RSA_PRIVATE_KEY"),
+    "OIDC_RSA_PRIVATE_KEY": env.str("OIDC_RSA_PRIVATE_KEY", multiline=True),
     "SCOPES": {
         "openid": "OpenID Connect scope",
         "read": "Read scope",
