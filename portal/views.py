@@ -699,6 +699,7 @@ def oauth_user_resource(request, *args, **kwargs):
     print("over here")
     return HttpResponse(
         json.dumps({
+            'userID': this_user.pk,
             'username': this_user.username, 
             'email': this_user.email}),
         content_type='application/json')
