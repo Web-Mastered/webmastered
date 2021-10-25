@@ -1,9 +1,30 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block body_class %}template-404{% endblock %}
 
-{% block content %}
-    <h1>Page not found</h1>
+{% block title %}
+    404 - Page Not Found
+{% endblock %}
 
-    <h2>Sorry, this page could not be found.</h2>
+{% block content %}
+
+    <div class="container-fluid text-center">
+        <div class="row justify-content-center">
+            <div class="col-10 col-md-6">
+                <div class="m-5">
+                    <img class="img-fluid" src="{% static 'assets/general/img/404.svg' %}">
+                </div>
+                
+                <h1 class="display-3 mb-3">Page Not Found</h1>
+                <h2 class="display-6">
+                    Sorry, the page that you were looking for no longer exists. Try going back to the previous
+                    page or head back to our <a href="/" role="button" class="btn btn-outline-primary">Home Page</a>.
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    
 {% endblock %}
