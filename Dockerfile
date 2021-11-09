@@ -29,7 +29,7 @@ RUN pip install "gunicorn==20.0.4"
 
 # Install the project requirements.
 COPY requirements.txt /
-RUN pip install -r /requirements.txt
+RUN pip install -r /requirements.cpython.txt
 
 # Use /app folder as a directory where the source code is stored.
 WORKDIR /app
