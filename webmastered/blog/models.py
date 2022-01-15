@@ -156,8 +156,8 @@ class BlogPostCommentAdmin(ModelAdmin):
 class BlogAdminGroup(ModelAdminGroup):
     menu_label = 'Blog'
     menu_icon = 'form'
-    items = (BlogPostCategoryAdmin)
+    items = (BlogPostCategoryAdmin,)
     if settings.ENABLE_EXPERIMENTAL_BLOG_COMMENTING:
-        items = (BlogPostCategoryAdmin, BlogPostCommentAdmin)
+        items = (BlogPostCategoryAdmin, BlogPostCommentAdmin,)
 
 modeladmin_register(BlogAdminGroup)

@@ -26,15 +26,6 @@ from engine import VERSION
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-env = environ.Env(
-    ENABLE_EXPERIMENTAL_BLOG_COMMENTING=(bool, False),
-    WAGTAIL_ENABLE_UPDATE_CHECK=(bool, False),
-    SECURE_SSL_REDIRECT=(bool,True),
-    COMPRESS_ENABLED=(bool, True),
-    ALLOWED_HOSTS=(list, [])
-)
-environ.Env.read_env()
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -145,10 +136,25 @@ WSGI_APPLICATION = 'engine.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis/db_engine',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': os.environ.get('REDIS_PASSWORD')
+        }
+    }
+}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': 5432,
     }
 }
 
@@ -203,7 +209,7 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
-COMPRESS_ENABLED = env('COMPRESS_ENABLED')
+COMPRESS_ENABLED = True
 COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter',  'compressor.filters.cssmin.CSSMinFilter']
 COMPRESS_OFFLINE = False
 LIBSASS_OUTPUT_STYLE = 'compressed'
@@ -227,13 +233,13 @@ WAGTAIL_SITE_NAME = "webmastered"
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = env('BASE_URL')
+BASE_URL = os.environ.get('BASE_URL')
 
 # This is added to prevent "auto-created primary key" warnings with wagtailmenus
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Disable Wagtail Update Checking
-WAGTAIL_ENABLE_UPDATE_CHECK = env('WAGTAIL_ENABLE_UPDATE_CHECK')
+WAGTAIL_ENABLE_UPDATE_CHECK = False
 
 # Prevent users from editing pages that they have locked.
 WAGTAILADMIN_GLOBAL_PAGE_EDIT_LOCK = True
@@ -246,7 +252,8 @@ WAGTAILMENUS_ACTIVE_ANCESTOR_CLASS = "ancestor active"
 
 SITE_ID = 1
 
-ENABLE_EXPERIMENTAL_BLOG_COMMENTING = env('ENABLE_EXPERIMENTAL_BLOG_COMMENTING')
+# ENABLE_EXPERIMENTAL_BLOG_COMMENTING = os.environ.get('ENABLE_EXPERIMENTAL_BLOG_COMMENTING')
+ENABLE_EXPERIMENTAL_BLOG_COMMENTING = True
 
 if ENABLE_EXPERIMENTAL_BLOG_COMMENTING:
     COMMENTS_APP = 'django_comments_xtd'
@@ -255,17 +262,17 @@ if ENABLE_EXPERIMENTAL_BLOG_COMMENTING:
     COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
                         b"Aequam memento rebus in arduis servare mentem.")
     # COMMENTS_XTD_FROM_EMAIL = "engine-noreply@" + str(urlparse(BASE_URL).netloc)
-    COMMENTS_XTD_FROM_EMAIL = env('EMAIL_FROM_USER')
+    COMMENTS_XTD_FROM_EMAIL = os.environ.get('EMAIL_FROM_USER')
 
-DISK_MOUNT_POINT = env('METRICS_DISK_MOUNT_POINT')
+DISK_MOUNT_POINT = os.environ.get('METRICS_DISK_MOUNT_POINT')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = env('EMAIL_USE_TLS')
-DEFAULT_FROM_EMAIL = env('EMAIL_FROM_USER')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_FROM_USER')
 
 WAGTAILSTREAMFORMS_ADMIN_MENU_LABEL = 'Contact Forms'
 WAGTAILSTREAMFORMS_ENABLE_FORM_PROCESSING = True
@@ -298,16 +305,16 @@ ACCOUNT_USERNAME_MIN_LENGTH = 2
 ACCOUNT_ADAPTER = 'portal.custom_account_adapters.NoNewUsersAccountAdapter'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
-STRIPE_API_KEY = env('STRIPE_API_KEY')
+STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
 
-CLOUDFLARE_EMAIL = env('CLOUDFLARE_EMAIL')
-CLOUDFLARE_ORIGIN_API_TOKEN = env('CLOUDFLARE_ORIGIN_API_TOKEN')
+CLOUDFLARE_EMAIL = os.environ.get('CLOUDFLARE_EMAIL')
+CLOUDFLARE_ORIGIN_API_TOKEN = os.environ.get('CLOUDFLARE_ORIGIN_API_TOKEN')
 
-DIGITALOCEAN_ACCESS_TOKEN = env('DIGITALOCEAN_ACCESS_TOKEN')
-OIDC_RSA_PRIVATE_KEY = env.str("OIDC_RSA_PRIVATE_KEY", multiline=True)
+DIGITALOCEAN_ACCESS_TOKEN = os.environ.get('DIGITALOCEAN_ACCESS_TOKEN')
+OIDC_RSA_PRIVATE_KEY = os.environ.get("OIDC_RSA_PRIVATE_KEY")
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
-    "OIDC_RSA_PRIVATE_KEY": env.str("OIDC_RSA_PRIVATE_KEY", multiline=True),
+    "OIDC_RSA_PRIVATE_KEY": os.environ.get("OIDC_RSA_PRIVATE_KEY"),
     "OAUTH2_VALIDATOR_CLASS": "portal.oauth_validator.CustomOAuth2Validator",
     "SCOPES": {
         "openid": "OpenID Connect scope",

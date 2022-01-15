@@ -1,27 +1,104 @@
-version: "3"
+version: '3.7'
 
 services:
-  app:
-    build:
-      context: .
-    ports:
-      - "8080:8080"
+  engine:
+    container_name: wm_engine
+    build: ./webmastered
+    command: gunicorn engine.wsgi:application --bind 0.0.0.0:8000
+    restart: always
     volumes:
-      - ./engine:/engine
-    command: >
-      sh -c "python manage.py migrate && gunicorn engine.wsgi:application --bind 0.0.0.0:8000 --workers=2 --threads=2"
+      - static_volume:/app/static
+      - media_volume:/app/media
+    expose:
+      - 8000
     environment:
-      - DATABASE_HOST=${DATABASE_HOST}
-      - DATABASE_NAME=${DATABASE_NAME}
-      - DATABASE_USER=${DATABASE_USER}
-      - DATABASE_PASS=${DATABASE_PASS}
+      - WSGI_SETTINGS_MODULE
+      - REDIS_PASSWORD
+      - DB_NAME
+      - DB_USER
+      - DB_PASS
+      - DB_HOST
+      - COMPRESS_ENABLED
+      - BASE_URL
+      - WAGTAIL_ENABLE_UPDATE_CHECK
+      - ENABLE_EXPERIMENTAL_BLOG_COMMENTING
+      - METRICS_DISK_MOUNT_POINT
+      - EMAIL_HOST
+      - EMAIL_PORT
+      - EMAIL_HOST_USER
+      - EMAIL_HOST_PASSWORD
+      - EMAIL_USE_TLS
+      - EMAIL_FROM_USER
+      - STRIPE_API_KEY
+      - CLOUDFLARE_EMAIL
+      - CLOUDFLARE_ORIGIN_API_TOKEN
+      - DIGITALOCEAN_ACCESS_TOKEN
+      - OIDC_RSA_PRIVATE_KEY
+      - SENTRY_DSN
+      - SENTRY_DEV_TRACE_SAMPLE_RATE
+      - SENTRY_PROD_TRACE_SAMPLE_RATE
+      - SECRET_KEY
+      - ALLOWED_HOSTS
+    networks:
+      - frontend-net
+      - backend-net
     depends_on:
       - db
   db:
+    container_name: wm_postgres
     image: postgres:13-alpine
     environment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASS}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    restart: always
+    networks:
+      - backend-net
+  nginx:
+    container_name: wm_nginx
+    build: ./nginx
+    restart: unless-stopped
     ports:
-      - "5432:5432"
+      - 1338:80
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    depends_on:
+      - engine
+    networks:
+      - frontend-net
+  redis:
+    container_name: wm_redis
+    restart: unless-stopped
+    image: redis:alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    expose:
+      - 6379
+    networks:
+      - backend-net
+  ofelia:
+    container_name: wm_ofelia
+    restart: always
+    image: mcuadros/ofelia:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./ofelia/config.ini:/etc/ofelia/config.ini
+    depends_on:
+      - engine
+      - db
+    networks:
+      - frontend-net
+      - backend-net
+
+networks:
+  frontend-net:
+  backend-net:
+
+volumes:
+  pg_data:
+  static_volume:
+  media_volume:
