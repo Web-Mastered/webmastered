@@ -4,7 +4,7 @@ services:
   engine:
     container_name: wm_engine
     build: ./webmastered
-    command: gunicorn engine.wsgi:application --bind 0.0.0.0:8000 --timeout 600
+    command: gunicorn engine.wsgi:application --bind 0.0.0.0:8000 --timeout 600 --workers=2 --threads=2
     restart: always
     volumes:
       - static_volume:/app/static
