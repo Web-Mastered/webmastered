@@ -62,8 +62,8 @@ services:
     container_name: wm_nginx
     build: ./nginx
     restart: unless-stopped
-    ports:
-      - 1338:80
+    expose:
+      - 80
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
