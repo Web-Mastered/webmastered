@@ -397,6 +397,7 @@ def server_metrics(request):
         Please try again later, contact the WM engineers if this error continues.
         We apologise for the inconvenience.
         """
+        print("DO Failed with %s", thisClient)
 
     droplet_cpu_count = do_droplet.vcpus
     droplet_ram_total = trunc(do_droplet.memory/1024)
@@ -416,6 +417,7 @@ def server_metrics(request):
         Please try again later, contact the WM engineers if this error continues.
         We apologise for the inconvenience.
         """
+        print("Engine metrics fetch fail with %s", thisClient)
         template = loader.get_template('portal/pages/server-metrics.html')
         context = {
             'page_title': "Server Metrics",
