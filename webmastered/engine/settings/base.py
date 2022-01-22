@@ -231,6 +231,15 @@ MEDIA_URL = '/media/'
 
 WAGTAIL_SITE_NAME = "webmastered"
 
+# Search
+# https://docs.wagtail.io/en/stable/topics/search/backends.html
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.search.backends.database',
+        'AUTO_UPDATE': False, # update_index is set to execute every midnight via ofelia
+    }
+}
+
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = os.environ.get('BASE_URL')
