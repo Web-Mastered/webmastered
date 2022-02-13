@@ -194,31 +194,31 @@ footer a {
 }
 
 .login-form input, .login-form textarea {
-    border-color: #e0f3f8 !important;
+    border-color: #00308f !important;
     background-color: transparent !important;
-    color: #e0f3f8 !important;
+    color: #00308f !important;
 }
 
 .login-form input:focus, .login-form textarea:focus {
-    border-color: #e0f3f8 !important;
+    border-color: #00308f !important;
     background-color: transparent !important;
-    color: #e0f3f8 !important;
+    color: #00308f !important;
 }
 
 .login-form label {
-    color: #e0f3f8;
+    color: #00308f;
     font-weight: 500;
 }
 
 .login-form .btn-send {
-    color: #00308f !important;
-    background-color: #e0f3f8 !important;
+    color: #e0f3f8 !important;
+    background-color: #00308f !important;
     font-weight: 800 !important;
 }
 
 .login-form .btn-back {
-    color: #e0f3f8 !important;
-    border-color: #e0f3f8 !important;
+    color: #00308f !important;
+    border-color: #00308f !important;
     background-color: transparent !important;
     font-weight: 800 !important;
 }
