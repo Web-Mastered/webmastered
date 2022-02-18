@@ -321,9 +321,13 @@ CLOUDFLARE_ORIGIN_API_TOKEN = os.environ.get('CLOUDFLARE_ORIGIN_API_TOKEN')
 
 DIGITALOCEAN_ACCESS_TOKEN = os.environ.get('DIGITALOCEAN_ACCESS_TOKEN')
 OIDC_RSA_PRIVATE_KEY = os.environ.get("OIDC_RSA_PRIVATE_KEY")
+try:
+    OIDC_RSA_PRIVATE_KEY = OIDC_RSA_PRIVATE_KEY.replace('\\\\n', '\n')
+except:
+    pass
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
-    "OIDC_RSA_PRIVATE_KEY": os.environ.get("OIDC_RSA_PRIVATE_KEY"),
+    "OIDC_RSA_PRIVATE_KEY": OIDC_RSA_PRIVATE_KEY,
     "OAUTH2_VALIDATOR_CLASS": "portal.oauth_validator.CustomOAuth2Validator",
     "SCOPES": {
         "openid": "OpenID Connect scope",
